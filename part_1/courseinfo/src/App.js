@@ -1,56 +1,49 @@
 const App = () => {
     const course = "Half Stack application development";
-    const part1 = "Fundamentals of React";
-    const exercises1 = 10;
-    const part2 = "Using props to pass data";
-    const exercises2 = 7;
-    const part3 = "State of a component";
-    const exercises3 = 14;
+    const part1 = {
+        name: "Fundamentals of React",
+        exercises: 10,
+    };
+    const part2 = {
+        name: "Using props to pass data",
+        exercises: 7,
+    };
+    const part3 = {
+        name: "State of a component",
+        exercises: 14,
+    };
 
     return (
         <div>
-            <Header courseTitle={course} />
-            <Content
-                courseParts={[
-                    { id: 0, title: part1, numberOfExercises: exercises1 },
-                    { id: 1, title: part2, numberOfExercises: exercises2 },
-                    { id: 2, title: part3, numberOfExercises: exercises3 },
-                ]}
-            />
+            <Header courseName={course} />
+            <Content part1={part1} part2={part2} part3={part3} />
             <Total
-                totalNumberOfExercises={exercises1 + exercises2 + exercises3}
+                totalNumberOfExercises={
+                    part1.exercises + part2.exercises + part3.exercises
+                }
             />
         </div>
     );
 };
 
-const Header = ({ courseTitle }) => {
-    return <h1>{courseTitle}</h1>;
+const Header = ({ courseName }) => {
+    return <h1>{courseName}</h1>;
 };
 
-const Content = ({ courseParts }) => {
+const Content = ({ part1, part2, part3 }) => {
     return (
         <div>
-            <Part
-                title={courseParts[0].title}
-                numberOfExercises={courseParts[0].numberOfExercises}
-            />
-            <Part
-                title={courseParts[1].title}
-                numberOfExercises={courseParts[1].numberOfExercises}
-            />
-            <Part
-                title={courseParts[2].title}
-                numberOfExercises={courseParts[2].numberOfExercises}
-            />
+            <Part name={part1.name} numberOfExercises={part1.exercises} />
+            <Part name={part2.name} numberOfExercises={part2.exercises} />
+            <Part name={part3.name} numberOfExercises={part3.exercises} />
         </div>
     );
 };
 
-const Part = ({ title, numberOfExercises }) => {
+const Part = ({ name, numberOfExercises }) => {
     return (
         <p>
-            {title} {numberOfExercises}
+            {name} {numberOfExercises}
         </p>
     );
 };
