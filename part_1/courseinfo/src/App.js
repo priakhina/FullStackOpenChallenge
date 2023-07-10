@@ -29,11 +29,30 @@ const Header = ({ courseTitle }) => {
 };
 
 const Content = ({ courseParts }) => {
-    return courseParts.map((part) => (
-        <p key={part.id}>
-            {part.title} {part.numberOfExercises}
+    return (
+        <div>
+            <Part
+                title={courseParts[0].title}
+                numberOfExercises={courseParts[0].numberOfExercises}
+            />
+            <Part
+                title={courseParts[1].title}
+                numberOfExercises={courseParts[1].numberOfExercises}
+            />
+            <Part
+                title={courseParts[2].title}
+                numberOfExercises={courseParts[2].numberOfExercises}
+            />
+        </div>
+    );
+};
+
+const Part = ({ title, numberOfExercises }) => {
+    return (
+        <p>
+            {title} {numberOfExercises}
         </p>
-    ));
+    );
 };
 
 const Total = ({ totalNumberOfExercises }) => {
