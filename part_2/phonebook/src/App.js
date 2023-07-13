@@ -1,5 +1,9 @@
 import { useState } from "react";
 
+import Filter from "./components/Filter";
+import PersonForm from "./components/PersonForm";
+import Persons from "./components/Persons";
+
 const App = () => {
     const [persons, setPersons] = useState([
         { name: "Arto Hellas", phoneNumber: "040-123456", id: 1 },
@@ -53,51 +57,21 @@ const App = () => {
     return (
         <div>
             <h2>Phonebook</h2>
-            <div>
-                Search contacts by name:{" "}
-                <input
-                    type="text"
-                    value={newSearchTerm}
-                    onChange={handleSearchTermChange}
-                />
-                <div>
-                    {newSearchResult.map((result) => (
-                        <p key={result.id}>
-                            {result.name} {result.phoneNumber}
-                        </p>
-                    ))}
-                </div>
-            </div>
+            <Filter
+                searchTerm={newSearchTerm}
+                searchResult={newSearchResult}
+                handleSearchTermChange={handleSearchTermChange}
+            />
             <h3>Add a new contact</h3>
-            <form onSubmit={addPerson}>
-                <div>
-                    name:{" "}
-                    <input
-                        type="text"
-                        value={newName}
-                        onChange={handleNameChange}
-                    />
-                </div>
-                <div>
-                    number:{" "}
-                    <input
-                        type="tel"
-                        value={newPhoneNumber}
-                        onChange={handlePhoneNumberChange}
-                    />
-                </div>
-                <div>
-                    <button type="submit">add</button>
-                </div>
-            </form>
+            <PersonForm
+                name={newName}
+                phoneNumber={newPhoneNumber}
+                handleNameChange={handleNameChange}
+                handlePhoneNumberChange={handlePhoneNumberChange}
+                addPerson={addPerson}
+            />
             <h3>Numbers</h3>
-            <div>
-                {persons.map((person) => (
-                    <p key={person.id}>
-                        {person.name} {person.phoneNumber}
-                    </p>
-                ))}
-            </div>
+            <Persons persons={persons} />
         </div>
     );
 };
