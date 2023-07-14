@@ -90,6 +90,20 @@ const App = () => {
                 setTimeout(() => {
                     setNotificationMessage(null);
                 }, 5000);
+            })
+            .catch((error) => {
+                setNotificationMessage({
+                    type: "failure",
+                    message: `${matchedPerson.name}'s contact info has already been removed from server`,
+                });
+                setTimeout(() => {
+                    setNotificationMessage(null);
+                }, 5000);
+
+                // Removing an already deleted note from the application's state (which causes the component to re-render)
+                setPersons(
+                    persons.filter((person) => person.id !== matchedPerson.id)
+                );
             });
     };
 
