@@ -21,12 +21,36 @@ const App = () => {
     const addPerson = (e) => {
         e.preventDefault();
 
-        const containsName = persons.some(
+        if (newName.trim() === "") return;
+
+        const matchedPerson = persons.find(
             (person) => person.name === newName.trim()
         );
 
-        if (containsName) {
-            alert(`${newName.trim()} is already added to the phonebook`);
+        if (matchedPerson) {
+            const isConfirmedUpdate = window.confirm(
+                `${newName.trim()} is already added to the phonebook. Replace the old number with a new one?`
+            );
+            if (isConfirmedUpdate) {
+                const updatedPerson = {
+                    ...matchedPerson,
+                    phoneNumber: newPhoneNumber,
+                };
+
+                phonebookService
+                    .update(matchedPerson.id, updatedPerson)
+                    .then((returnedPerson) => {
+                        setPersons(
+                            persons.map((person) =>
+                                person.id !== returnedPerson.id
+                                    ? person
+                                    : returnedPerson
+                            )
+                        );
+                        setNewName("");
+                        setNewPhoneNumber("");
+                    });
+            }
         } else {
             const newPerson = {
                 name: newName.trim(),
@@ -45,11 +69,11 @@ const App = () => {
 
     const deletePerson = (id) => {
         const personToDelete = persons.find((person) => person.id === id);
-        const isConfirmed = window.confirm(
+        const isConfirmedDelete = window.confirm(
             `Are you sure you want to delete ${personToDelete.name}?`
         );
 
-        if (isConfirmed) {
+        if (isConfirmedDelete) {
             phonebookService.remove(id).then(() => {
                 const updatedPersons = persons.filter(
                     (person) => person.id !== id
