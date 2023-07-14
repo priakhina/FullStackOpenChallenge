@@ -18,7 +18,7 @@ const App = () => {
         });
     }, []);
 
-    const addPerson = (e) => {
+    const submitForm = (e) => {
         e.preventDefault();
 
         if (newName.trim() === "") return;
@@ -28,52 +28,60 @@ const App = () => {
         );
 
         if (matchedPerson) {
-            const isConfirmedUpdate = window.confirm(
+            const shouldUpdate = window.confirm(
                 `${newName.trim()} is already added to the phonebook. Replace the old number with a new one?`
             );
-            if (isConfirmedUpdate) {
-                const updatedPerson = {
-                    ...matchedPerson,
-                    phoneNumber: newPhoneNumber,
-                };
-
-                phonebookService
-                    .update(matchedPerson.id, updatedPerson)
-                    .then((returnedPerson) => {
-                        setPersons(
-                            persons.map((person) =>
-                                person.id !== returnedPerson.id
-                                    ? person
-                                    : returnedPerson
-                            )
-                        );
-                        setNewName("");
-                        setNewPhoneNumber("");
-                    });
+            if (shouldUpdate) {
+                updatePhoneNumber(matchedPerson);
             }
         } else {
-            const newPerson = {
-                name: newName.trim(),
-                phoneNumber: newPhoneNumber.trim(),
-            }; // the id property is intentionally omitted (it's better to let the server generate ids for the resources)
+            addPerson();
+        }
+    };
 
-            // Since the data we send in the POST request is a JavaScript object, axios automatically
-            // sets the appropriate application/json value for the Content-Type header (which is required by json-server).
-            phonebookService.create(newPerson).then((returnedPerson) => {
-                setPersons(persons.concat(returnedPerson));
+    const addPerson = () => {
+        const newPerson = {
+            name: newName.trim(),
+            phoneNumber: newPhoneNumber.trim(),
+        }; // the id property is intentionally omitted (it's better to let the server generate ids for the resources)
+
+        // Since the data we send in the POST request is a JavaScript object, axios automatically
+        // sets the appropriate application/json value for the Content-Type header (which is required by json-server).
+        phonebookService.create(newPerson).then((returnedPerson) => {
+            setPersons(persons.concat(returnedPerson));
+            setNewName("");
+            setNewPhoneNumber("");
+        }); // returnedPerson (the data the server responded with) contains the new person object's data with generated id
+    };
+
+    const updatePhoneNumber = (matchedPerson) => {
+        const updatedPerson = {
+            ...matchedPerson,
+            phoneNumber: newPhoneNumber,
+        };
+
+        phonebookService
+            .update(matchedPerson.id, updatedPerson)
+            .then((returnedPerson) => {
+                setPersons(
+                    persons.map((person) =>
+                        person.id !== returnedPerson.id
+                            ? person
+                            : returnedPerson
+                    )
+                );
                 setNewName("");
                 setNewPhoneNumber("");
-            }); // returnedPerson (the data the server responded with) contains the new person object's data with generated id
-        }
+            });
     };
 
     const deletePerson = (id) => {
         const personToDelete = persons.find((person) => person.id === id);
-        const isConfirmedDelete = window.confirm(
+        const shouldDelete = window.confirm(
             `Are you sure you want to delete ${personToDelete.name}?`
         );
 
-        if (isConfirmedDelete) {
+        if (shouldDelete) {
             phonebookService.remove(id).then(() => {
                 const updatedPersons = persons.filter(
                     (person) => person.id !== id
@@ -115,7 +123,7 @@ const App = () => {
                 phoneNumber={newPhoneNumber}
                 handleNameChange={handleNameChange}
                 handlePhoneNumberChange={handlePhoneNumberChange}
-                addPerson={addPerson}
+                handleFormSubmission={submitForm}
             />
             <h3>Numbers</h3>
             <Persons persons={persons} handleDelete={deletePerson} />
