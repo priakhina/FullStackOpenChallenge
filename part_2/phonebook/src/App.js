@@ -31,12 +31,17 @@ const App = () => {
             const newPerson = {
                 name: newName.trim(),
                 phoneNumber: newPhoneNumber.trim(),
-                id: persons.length + 1,
-            };
+            }; // the id property is intentionally omitted (it's better to let the server generate ids for the resources)
 
-            setPersons(persons.concat(newPerson));
-            setNewName("");
-            setNewPhoneNumber("");
+            // Since the data we send in the POST request is a JavaScript object, axios automatically
+            // sets the appropriate application/json value for the Content-Type header (which is required by json-server).
+            axios
+                .post("http://localhost:3001/persons", newPerson)
+                .then((response) => {
+                    setPersons(persons.concat(response.data));
+                    setNewName("");
+                    setNewPhoneNumber("");
+                }); // response.data (the data the server responded with) contains the new person object's data with generated id
         }
     };
 
