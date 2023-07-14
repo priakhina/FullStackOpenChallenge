@@ -43,6 +43,24 @@ const App = () => {
         }
     };
 
+    const deletePerson = (id) => {
+        const personToDelete = persons.find((person) => person.id === id);
+        const isConfirmed = window.confirm(
+            `Are you sure you want to delete ${personToDelete.name}?`
+        );
+
+        if (isConfirmed) {
+            phonebookService.remove(id).then(() => {
+                const updatedPersons = persons.filter(
+                    (person) => person.id !== id
+                );
+                setPersons(updatedPersons);
+                setNewSearchTerm("");
+                setNewSearchResult([]);
+            });
+        }
+    };
+
     const handleNameChange = (e) => setNewName(e.target.value);
 
     const handlePhoneNumberChange = (e) => setNewPhoneNumber(e.target.value);
@@ -76,7 +94,7 @@ const App = () => {
                 addPerson={addPerson}
             />
             <h3>Numbers</h3>
-            <Persons persons={persons} />
+            <Persons persons={persons} handleDelete={deletePerson} />
         </div>
     );
 };
