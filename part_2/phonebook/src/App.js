@@ -4,6 +4,7 @@ import phonebookService from "./services/phonebook";
 import Filter from "./components/Filter";
 import PersonForm from "./components/PersonForm";
 import Persons from "./components/Persons";
+import Notification from "./components/Notification";
 
 const App = () => {
     const [persons, setPersons] = useState([]);
@@ -11,6 +12,7 @@ const App = () => {
     const [newPhoneNumber, setNewPhoneNumber] = useState("");
     const [newSearchTerm, setNewSearchTerm] = useState("");
     const [newSearchResult, setNewSearchResult] = useState([]);
+    const [notificationMessage, setNotificationMessage] = useState(null);
 
     useEffect(() => {
         phonebookService.getAll().then((initialPersons) => {
@@ -51,6 +53,14 @@ const App = () => {
             setPersons(persons.concat(returnedPerson));
             setNewName("");
             setNewPhoneNumber("");
+
+            setNotificationMessage({
+                type: "success",
+                message: `Added ${returnedPerson.name}`,
+            });
+            setTimeout(() => {
+                setNotificationMessage(null);
+            }, 5000);
         }); // returnedPerson (the data the server responded with) contains the new person object's data with generated id
     };
 
@@ -72,6 +82,14 @@ const App = () => {
                 );
                 setNewName("");
                 setNewPhoneNumber("");
+
+                setNotificationMessage({
+                    type: "success",
+                    message: `Updated ${returnedPerson.name}'s phone number to ${returnedPerson.phoneNumber}`,
+                });
+                setTimeout(() => {
+                    setNotificationMessage(null);
+                }, 5000);
             });
     };
 
@@ -112,6 +130,12 @@ const App = () => {
     return (
         <div>
             <h2>Phonebook</h2>
+            <Notification
+                message={
+                    notificationMessage ? notificationMessage.message : null
+                }
+                type={notificationMessage ? notificationMessage.type : null}
+            />
             <Filter
                 searchTerm={newSearchTerm}
                 searchResult={newSearchResult}
