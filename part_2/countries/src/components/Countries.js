@@ -1,7 +1,7 @@
 import Country from "./Country";
 import CountryDescription from "./CountryDescription";
 
-const Countries = ({ countries }) => {
+const Countries = ({ countries, handleClick }) => {
     if (countries.length > 10) {
         return (
             <div className="notification">{`Too many matches (${countries.length}). Please specify another query.`}</div>
@@ -11,7 +11,11 @@ const Countries = ({ countries }) => {
             <div>
                 <ul className="countries-list">
                     {countries.map((country) => (
-                        <Country key={country.name.common} country={country} />
+                        <Country
+                            key={country.name.common}
+                            country={country}
+                            handleClick={handleClick}
+                        />
                     ))}
                 </ul>
             </div>

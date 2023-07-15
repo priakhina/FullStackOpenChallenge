@@ -26,10 +26,12 @@ const App = () => {
 
     const handleQueryChange = (e) => setQuery(e.target.value);
 
+    const handleClick = (country) => setCountries([{ ...country }]);
+
     return (
         <>
             <SearchField query={query} handleQueryChange={handleQueryChange} />
-            <Countries countries={countries} />
+            <Countries countries={countries} handleClick={handleClick} />
         </>
     );
 };
