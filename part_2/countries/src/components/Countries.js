@@ -1,7 +1,7 @@
 import Country from "./Country";
 import CountryDescription from "./CountryDescription";
 
-const Countries = ({ countries, handleClick }) => {
+const Countries = ({ countries, handleClick, weatherData }) => {
     if (countries.length > 10) {
         return (
             <div className="notification">{`Too many matches (${countries.length}). Please specify another query.`}</div>
@@ -21,7 +21,12 @@ const Countries = ({ countries, handleClick }) => {
             </div>
         );
     } else if (countries.length === 1) {
-        return <CountryDescription country={countries[0]} />;
+        return (
+            <CountryDescription
+                country={countries[0]}
+                weatherData={weatherData}
+            />
+        );
     } else {
         return <></>;
     }
