@@ -49,19 +49,33 @@ const App = () => {
 
         // Since the data we send in the POST request is a JavaScript object, axios automatically
         // sets the appropriate application/json value for the Content-Type header (which is required by json-server).
-        phonebookService.create(newPerson).then((returnedPerson) => {
-            setPersons(persons.concat(returnedPerson));
-            setNewName("");
-            setNewPhoneNumber("");
+        // returnedPerson (the data the server responded with) contains the new person object's data with generated id.
+        phonebookService
+            .create(newPerson)
+            .then((returnedPerson) => {
+                setPersons(persons.concat(returnedPerson));
+                setNewName("");
+                setNewPhoneNumber("");
 
-            setNotificationMessage({
-                type: "success",
-                message: `Added ${returnedPerson.name}`,
+                setNotificationMessage({
+                    type: "success",
+                    message: `Added ${returnedPerson.name}`,
+                });
+                setTimeout(() => {
+                    setNotificationMessage(null);
+                }, 5000);
+            })
+            .catch((error) => {
+                const errorMessage = error.response.data.error.split(": ")[2];
+
+                setNotificationMessage({
+                    type: "failure",
+                    message: errorMessage,
+                });
+                setTimeout(() => {
+                    setNotificationMessage(null);
+                }, 5000);
             });
-            setTimeout(() => {
-                setNotificationMessage(null);
-            }, 5000);
-        }); // returnedPerson (the data the server responded with) contains the new person object's data with generated id
     };
 
     const updatePhoneNumber = (matchedPerson) => {
