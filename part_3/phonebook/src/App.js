@@ -23,11 +23,10 @@ const App = () => {
     const submitForm = (e) => {
         e.preventDefault();
 
-        if (newName.trim() === "") return;
-
-        const matchedPerson = persons.find(
-            (person) => person.name === newName.trim()
-        );
+        const matchedPerson =
+            newName.trim() === ""
+                ? null
+                : persons.find((person) => person.name === newName.trim());
 
         if (matchedPerson) {
             const shouldUpdate = window.confirm(
@@ -66,7 +65,7 @@ const App = () => {
                 }, 5000);
             })
             .catch((error) => {
-                const errorMessage = error.response.data.error.split(": ")[2];
+                const errorMessage = error.response.data.error;
 
                 setNotificationMessage({
                     type: "failure",
