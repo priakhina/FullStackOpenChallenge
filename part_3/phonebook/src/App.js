@@ -26,11 +26,15 @@ const App = () => {
         const matchedPerson =
             newName.trim() === ""
                 ? null
-                : persons.find((person) => person.name === newName.trim());
+                : persons.find(
+                      (person) =>
+                          person.name.toUpperCase() ===
+                          newName.trim().toUpperCase()
+                  );
 
         if (matchedPerson) {
             const shouldUpdate = window.confirm(
-                `${newName.trim()} is already added to the phonebook. Replace the old number with a new one?`
+                `"${newName.trim()}" is already added to the phonebook. Replace the old number with a new one?`
             );
             if (shouldUpdate) {
                 updatePhoneNumber(matchedPerson);
@@ -58,7 +62,7 @@ const App = () => {
 
                 setNotificationMessage({
                     type: "success",
-                    message: `Added ${returnedPerson.name}`,
+                    message: `Added "${returnedPerson.name}" to the phonebook.`,
                 });
                 setTimeout(() => {
                     setNotificationMessage(null);
@@ -98,7 +102,7 @@ const App = () => {
 
                 setNotificationMessage({
                     type: "success",
-                    message: `Updated ${returnedPerson.name}'s phone number to ${returnedPerson.phoneNumber}`,
+                    message: `Updated ${returnedPerson.name}'s phone number to ${returnedPerson.phoneNumber}.`,
                 });
                 setTimeout(() => {
                     setNotificationMessage(null);
@@ -107,7 +111,7 @@ const App = () => {
             .catch((error) => {
                 setNotificationMessage({
                     type: "failure",
-                    message: `${matchedPerson.name}'s contact info has already been removed from server`,
+                    message: `${matchedPerson.name}'s contact info has already been removed from server.`,
                 });
                 setTimeout(() => {
                     setNotificationMessage(null);
@@ -123,7 +127,7 @@ const App = () => {
     const deletePerson = (id) => {
         const personToDelete = persons.find((person) => person.id === id);
         const shouldDelete = window.confirm(
-            `Are you sure you want to delete ${personToDelete.name}?`
+            `Are you sure you want to delete "${personToDelete.name}"?`
         );
 
         if (shouldDelete) {
@@ -155,7 +159,7 @@ const App = () => {
     };
 
     return (
-        <div>
+        <div className="wrapper">
             <h2>Phonebook</h2>
             <Notification
                 message={
@@ -168,7 +172,6 @@ const App = () => {
                 searchResult={newSearchResult}
                 handleSearchTermChange={handleSearchTermChange}
             />
-            <h3>Add a new contact</h3>
             <PersonForm
                 name={newName}
                 phoneNumber={newPhoneNumber}
@@ -176,7 +179,6 @@ const App = () => {
                 handlePhoneNumberChange={handlePhoneNumberChange}
                 handleFormSubmission={submitForm}
             />
-            <h3>Numbers</h3>
             <Persons persons={persons} handleDelete={deletePerson} />
         </div>
     );

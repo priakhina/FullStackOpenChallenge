@@ -5,7 +5,12 @@ const Notification = ({ message, type }) => {
         return null;
     }
 
-    return <div className={className}>{message}</div>;
+    return (
+        <div className={className}>
+            <span>{type}</span>
+            {message}
+        </div>
+    );
 };
 
 export default Notification;
