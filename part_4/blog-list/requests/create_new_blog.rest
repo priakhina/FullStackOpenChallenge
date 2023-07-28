@@ -1,0 +1,9 @@
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
+
+{
+    "title": "When I wrote this code, only God and I understood what I did. Now only God knows.",
+	"author": "Anonymous",
+	"url": "https://www.reddit.com/r/ProgrammerHumor/comments/j7t8ju/just_need_to_replace_that_face_with_mine_collected/",
+	"likes": "0"
+}
