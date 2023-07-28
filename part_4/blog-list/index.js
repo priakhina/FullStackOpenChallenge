@@ -3,6 +3,7 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 const mongoose = require("mongoose");
+const logger = require("./utils/logger");
 
 const blogSchema = new mongoose.Schema({
 	title: String,
@@ -24,7 +25,7 @@ const unknownEndpoint = (request, response) => {
 };
 
 const errorHandler = (error, request, response, next) => {
-	console.error(error.message);
+	logger.error(error.message);
 
 	if (error.name === "CastError") {
 		return response.status(400).send({ error: "malformed id" });
@@ -52,5 +53,5 @@ app.use(errorHandler);
 
 const PORT = process.env.PORT;
 app.listen(PORT, () => {
-	console.log(`Server running on port ${PORT}`);
+	logger.info(`Server running on port ${PORT}`);
 });
