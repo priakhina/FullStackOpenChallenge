@@ -12,6 +12,16 @@ mongoose.connect(mongoUrl);
 app.use(cors());
 app.use(express.json());
 
+const requestLogger = (request, response, next) => {
+	console.log("Method:", request.method);
+	console.log("Path:  ", request.path);
+	console.log("Body:  ", request.body);
+	console.log("---");
+	next();
+};
+
+app.use(requestLogger);
+
 app.use("/api/blogs", blogsRouter);
 
 const unknownEndpoint = (request, response) => {
