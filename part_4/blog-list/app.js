@@ -5,9 +5,22 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 const blogsRouter = require("./controllers/blogs");
 const middleware = require("./utils/middleware");
+const logger = require("./utils/logger");
+
+mongoose.set("strictQuery", false);
 
 const mongoUrl = config.MONGODB_URI;
-mongoose.connect(mongoUrl);
+
+logger.info("connecting to", mongoUrl);
+
+mongoose
+	.connect(mongoUrl)
+	.then(() => {
+		logger.info("connected to MongoDB");
+	})
+	.catch((error) => {
+		logger.error("error connecting to MongoDB:", error.message);
+	});
 
 app.use(cors());
 app.use(express.json());
