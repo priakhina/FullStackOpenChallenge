@@ -21,13 +21,13 @@ const mostBlogs = (blogs) => {
 
 	const numberOfBlogsByAuthor = new Map();
 
-	for (const blog of blogs) {
+	for (const { author } of blogs) {
 		const numberOfBlogs =
-			numberOfBlogsByAuthor.get(blog.author) === undefined
+			numberOfBlogsByAuthor.get(author) === undefined
 				? 1
-				: numberOfBlogsByAuthor.get(blog.author) + 1;
+				: numberOfBlogsByAuthor.get(author) + 1;
 
-		numberOfBlogsByAuthor.set(blog.author, numberOfBlogs);
+		numberOfBlogsByAuthor.set(author, numberOfBlogs);
 	}
 
 	const authorWithMostBlogs = [...numberOfBlogsByAuthor.entries()].reduce(
@@ -40,9 +40,34 @@ const mostBlogs = (blogs) => {
 	};
 };
 
+const mostLikes = (blogs) => {
+	if (blogs.length === 0) return null;
+
+	const numberOfLikesByAuthor = new Map();
+
+	for (const { author, likes } of blogs) {
+		const numberOfLikes =
+			numberOfLikesByAuthor.get(author) === undefined
+				? likes
+				: numberOfLikesByAuthor.get(author) + likes;
+
+		numberOfLikesByAuthor.set(author, numberOfLikes);
+	}
+
+	const authorWithMostLikes = [...numberOfLikesByAuthor.entries()].reduce(
+		(a, b) => (a[1] > b[1] ? a : b)
+	); // this returns the author with most likes and the number of likes in an array (e.g., ["Edsger W. Dijkstra", 17])
+
+	return {
+		author: authorWithMostLikes[0],
+		likes: authorWithMostLikes[1],
+	};
+};
+
 module.exports = {
 	dummy,
 	totalLikes,
 	favoriteBlog,
 	mostBlogs,
+	mostLikes,
 };
