@@ -22,11 +22,13 @@ const initialBlogs = [
 beforeEach(async () => {
 	await Blog.deleteMany({});
 
-	let blogObject = new Blog(initialBlogs[0]);
-	await blogObject.save();
+	const blogObjects = initialBlogs.map((blog) => new Blog(blog));
+	const promiseArray = blogObjects.map((blog) => blog.save());
 
-	blogObject = new Blog(initialBlogs[1]);
-	await blogObject.save();
+	// Promise.all method (https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/all)
+	// can be used for transforming an array of promises into a single promise, that will be fulfilled
+	// once every promise in the array passed to it as a parameter is resolved.
+	await Promise.all(promiseArray);
 });
 
 test("all blogs are returned as json", async () => {
