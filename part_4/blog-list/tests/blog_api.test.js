@@ -1,27 +1,13 @@
 const mongoose = require("mongoose");
 const supertest = require("supertest");
+const helper = require("./test_helper");
 const app = require("../app");
 const api = supertest(app);
 const Blog = require("../models/blog");
 
-const initialBlogs = [
-	{
-		title: "React patterns",
-		author: "Michael Chan",
-		url: "https://reactpatterns.com/",
-		likes: 7,
-	},
-	{
-		title: "Go To Statement Considered Harmful",
-		author: "Edsger W. Dijkstra",
-		url: "http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html",
-		likes: 5,
-	},
-];
-
 beforeEach(async () => {
 	await Blog.deleteMany({});
-	await Blog.insertMany(initialBlogs);
+	await Blog.insertMany(helper.initialBlogs);
 });
 
 test("all blogs are returned as json", async () => {
@@ -30,15 +16,15 @@ test("all blogs are returned as json", async () => {
 		.expect(200)
 		.expect("Content-Type", /application\/json/);
 
-	const response = await api.get("/api/blogs");
+	const blogs = await helper.blogsInDb();
 
-	expect(response.body).toHaveLength(initialBlogs.length);
+	expect(blogs).toHaveLength(helper.initialBlogs.length);
 });
 
 test("every blog has the property named id", async () => {
-	const response = await api.get("/api/blogs");
+	const blogs = await helper.blogsInDb();
 
-	response.body.forEach((blog) => expect(blog.id).toBeDefined());
+	blogs.forEach((blog) => expect(blog.id).toBeDefined());
 });
 
 test("a blog can be added", async () => {
@@ -55,10 +41,10 @@ test("a blog can be added", async () => {
 		.expect(201)
 		.expect("Content-Type", /application\/json/);
 
-	const response = await api.get("/api/blogs");
-	expect(response.body).toHaveLength(initialBlogs.length + 1);
+	const blogsAtEnd = await helper.blogsInDb();
+	expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length + 1);
 
-	const contents = response.body.map((blog) => blog.title);
+	const contents = blogsAtEnd.map((blog) => blog.title);
 	expect(contents).toContain("Canonical string reduction");
 });
 
