@@ -67,6 +67,32 @@ test("when the likes property of the added blog is not specified, it defaults to
 	expect(addedBlog.likes).toBe(0);
 });
 
+test("when the title or url properties of the added blog are not specified, the response status code is 400", async () => {
+	let newBlog = {
+		author: "Robert C. Martin",
+		url: "http://blog.cleancoder.com/uncle-bob/2017/03/03/TDD-Harms-Architecture.html",
+		likes: 0,
+	};
+
+	await api.post("/api/blogs").send(newBlog).expect(400);
+
+	let blogsAtEnd = await helper.blogsInDb();
+
+	expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length);
+
+	newBlog = {
+		title: "TDD harms architecture",
+		author: "Robert C. Martin",
+		likes: 0,
+	};
+
+	await api.post("/api/blogs").send(newBlog).expect(400);
+
+	blogsAtEnd = await helper.blogsInDb();
+
+	expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length);
+});
+
 afterAll(async () => {
 	await mongoose.connection.close();
 });
