@@ -48,6 +48,25 @@ test("a blog can be added", async () => {
 	expect(contents).toContain("Canonical string reduction");
 });
 
+test("when the likes property of the added blog is not specified, it defaults to the value 0", async () => {
+	const newBlog = {
+		title: "First class tests",
+		author: "Robert C. Martin",
+		url: "http://blog.cleancoder.com/uncle-bob/2017/05/05/TestDefinitions.htmll",
+	};
+
+	await api
+		.post("/api/blogs")
+		.send(newBlog)
+		.expect(201)
+		.expect("Content-Type", /application\/json/);
+
+	const blogsAtEnd = await helper.blogsInDb();
+
+	const addedBlog = blogsAtEnd[blogsAtEnd.length - 1];
+	expect(addedBlog.likes).toBe(0);
+});
+
 afterAll(async () => {
 	await mongoose.connection.close();
 });
