@@ -18,7 +18,14 @@ const errorHandler = (error, request, response, next) => {
 	if (error.name === "CastError") {
 		return response.status(400).send({ error: "malformed id" });
 	} else if (error.name === "ValidationError") {
-		return response.status(400).json({ error: error.message });
+		const errors = [];
+
+		// collecting all error messages; source: https://stackoverflow.com/a/61056403
+		Object.keys(error.errors).forEach((key) => {
+			errors.push(error.errors[key].message);
+		});
+
+		return response.status(400).json({ error: errors.join(" ") });
 	}
 
 	next(error);

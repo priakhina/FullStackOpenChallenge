@@ -1,9 +1,19 @@
 const mongoose = require("mongoose");
+const uniqueValidator = require("mongoose-unique-validator");
 
 const userSchema = new mongoose.Schema({
-	username: String,
+	username: {
+		type: String,
+		required: [true, "username is required."],
+		minLength: [3, "username must be at least 3 characters long."],
+		unique: [true, "username must be unique."],
+	},
 	name: String,
 	passwordHash: String,
+});
+
+userSchema.plugin(uniqueValidator, {
+	message: "{PATH} must be unique.",
 });
 
 userSchema.set("toJSON", {
