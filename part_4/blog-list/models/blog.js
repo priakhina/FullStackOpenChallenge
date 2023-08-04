@@ -11,6 +11,10 @@ const blogSchema = new mongoose.Schema({
 		required: true,
 	},
 	likes: Number,
+	user: {
+		type: mongoose.Schema.Types.ObjectId,
+		ref: "User",
+	},
 });
 
 // the toJSON method of the schema allows to format the objects returned by Mongoose
