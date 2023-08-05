@@ -1,6 +1,6 @@
 POST http://localhost:3003/api/blogs
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb3QiLCJpZCI6IjY0Y2Q1ZGQ0ZDIyZjI1YmRjODRkODc4ZSIsImlhdCI6MTY5MTE4NDMyMX0.xLkq-dnpG9rQx7X4RkWDN0x2cPjBEUXhnwy9y5O1BXc
+Authorization: Bearer USER-TOKEN-HERE
 
 {
     "title": "When I wrote this code, only God and I understood what I did. Now only God knows.",
