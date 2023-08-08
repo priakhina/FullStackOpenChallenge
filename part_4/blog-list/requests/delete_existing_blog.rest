@@ -1,0 +1,2 @@
+DELETE http://localhost:3003/api/blogs/BLOG-ID-HERE
+Authorization: Bearer USER-TOKEN-HERE
