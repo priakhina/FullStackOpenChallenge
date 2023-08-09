@@ -50,7 +50,9 @@ describe("addition of a new blog", () => {
 			id: user._id,
 		};
 
-		const userToken = jwt.sign(userForToken, process.env.SECRET);
+		const userToken = jwt.sign(userForToken, process.env.SECRET, {
+			expiresIn: 60 * 60,
+		});
 
 		headers["Authorization"] = `Bearer ${userToken}`;
 	});
@@ -161,7 +163,9 @@ describe("deletion of a blog", () => {
 			id: user._id,
 		};
 
-		const userToken = jwt.sign(userForToken, process.env.SECRET);
+		const userToken = jwt.sign(userForToken, process.env.SECRET, {
+			expiresIn: 60 * 60,
+		});
 
 		headers["Authorization"] = `Bearer ${userToken}`;
 	});
