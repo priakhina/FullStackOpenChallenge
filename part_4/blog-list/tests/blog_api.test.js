@@ -1,9 +1,12 @@
 const mongoose = require("mongoose");
 const supertest = require("supertest");
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
 const helper = require("./test_helper");
 const app = require("../app");
 const api = supertest(app);
 const Blog = require("../models/blog");
+const User = require("../models/user");
 
 beforeEach(async () => {
 	await Blog.deleteMany({});
@@ -32,7 +35,27 @@ describe("when there is initially some blogs saved", () => {
 });
 
 describe("addition of a new blog", () => {
-	test("succeeds with status code 201 if data is valid", async () => {
+	const headers = {};
+
+	beforeAll(async () => {
+		await User.deleteMany({});
+
+		const passwordHash = await bcrypt.hash("secret", 10);
+		const user = new User({ username: "root", passwordHash });
+
+		await user.save();
+
+		const userForToken = {
+			username: user.username,
+			id: user._id,
+		};
+
+		const userToken = jwt.sign(userForToken, process.env.SECRET);
+
+		headers["Authorization"] = `Bearer ${userToken}`;
+	});
+
+	test("succeeds with status code 201 if data is valid and correct token is provided", async () => {
 		const newBlog = {
 			title: "Canonical string reduction",
 			author: "Edsger W. Dijkstra",
@@ -42,6 +65,7 @@ describe("addition of a new blog", () => {
 
 		await api
 			.post("/api/blogs")
+			.set(headers)
 			.send(newBlog)
 			.expect(201)
 			.expect("Content-Type", /application\/json/);
@@ -62,6 +86,7 @@ describe("addition of a new blog", () => {
 
 		await api
 			.post("/api/blogs")
+			.set(headers)
 			.send(newBlog)
 			.expect(201)
 			.expect("Content-Type", /application\/json/);
@@ -72,6 +97,25 @@ describe("addition of a new blog", () => {
 		expect(addedBlog.likes).toBe(0);
 	});
 
+	test("fails with status code 401 if token is not provided", async () => {
+		const newBlog = {
+			title: "Canonical string reduction",
+			author: "Edsger W. Dijkstra",
+			url: "http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html",
+			likes: 12,
+		};
+
+		await api
+			.post("/api/blogs")
+			.send(newBlog)
+			.expect(401)
+			.expect("Content-Type", /application\/json/);
+
+		const blogsAtEnd = await helper.blogsInDb();
+
+		expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length);
+	});
+
 	test("fails with status code 400 if the title property of the added blog is not specified", async () => {
 		const newBlog = {
 			author: "Robert C. Martin",
@@ -79,7 +123,7 @@ describe("addition of a new blog", () => {
 			likes: 0,
 		};
 
-		await api.post("/api/blogs").send(newBlog).expect(400);
+		await api.post("/api/blogs").set(headers).send(newBlog).expect(400);
 
 		const blogsAtEnd = await helper.blogsInDb();
 
@@ -93,7 +137,7 @@ describe("addition of a new blog", () => {
 			likes: 0,
 		};
 
-		await api.post("/api/blogs").send(newBlog).expect(400);
+		await api.post("/api/blogs").set(headers).send(newBlog).expect(400);
 
 		const blogsAtEnd = await helper.blogsInDb();
 
@@ -102,14 +146,53 @@ describe("addition of a new blog", () => {
 });
 
 describe("deletion of a blog", () => {
-	test("succeeds with status code 204 if id is valid", async () => {
-		const blogsAtStart = await helper.blogsInDb();
-		const blogToDelete = blogsAtStart[0];
+	const headers = {};
 
-		await api.delete(`/api/blogs/${blogToDelete.id}`).expect(204);
+	beforeAll(async () => {
+		await User.deleteMany({});
+
+		const passwordHash = await bcrypt.hash("secret", 10);
+		const user = new User({ username: "root", passwordHash });
+
+		await user.save();
+
+		const userForToken = {
+			username: user.username,
+			id: user._id,
+		};
+
+		const userToken = jwt.sign(userForToken, process.env.SECRET);
+
+		headers["Authorization"] = `Bearer ${userToken}`;
+	});
+
+	test("succeeds with status code 204 if id of the blog is valid and user is valid", async () => {
+		const newBlog = {
+			title: "Canonical string reduction",
+			author: "Edsger W. Dijkstra",
+			url: "http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html",
+			likes: 12,
+		};
+
+		await api
+			.post("/api/blogs")
+			.set(headers)
+			.send(newBlog)
+			.expect(201)
+			.expect("Content-Type", /application\/json/);
+
+		const blogsAtStart = await helper.blogsInDb();
+		const blogToDelete = blogsAtStart.find(
+			(blog) => blog.title === newBlog.title
+		);
+
+		await api
+			.delete(`/api/blogs/${blogToDelete.id}`)
+			.set(headers)
+			.expect(204);
 
 		const blogsAtEnd = await helper.blogsInDb();
-		expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length - 1);
+		expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length);
 
 		const contents = blogsAtEnd.map((blog) => blog.title);
 		expect(contents).not.toContain(blogToDelete.title);
@@ -117,7 +200,7 @@ describe("deletion of a blog", () => {
 });
 
 describe("updating a blog", () => {
-	test("succeeds with status code 200 if id is valid", async () => {
+	test("succeeds with status code 200 if id of the blog is valid", async () => {
 		const blogsAtStart = await helper.blogsInDb();
 		const blogToUpdate = blogsAtStart[0];
 
