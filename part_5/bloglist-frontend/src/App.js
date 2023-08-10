@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import Blog from "./components/Blog";
+import Notification from "./components/Notification";
 import blogService from "./services/blogs";
 import loginService from "./services/login";
 
@@ -8,6 +9,7 @@ const App = () => {
 	const [blogTitle, setBlogTitle] = useState("");
 	const [blogAuthor, setBlogAuthor] = useState("");
 	const [blogUrl, setBlogUrl] = useState("");
+	const [notificationMessage, setNotificationMessage] = useState(null);
 
 	const [username, setUsername] = useState("");
 	const [password, setPassword] = useState("");
@@ -47,7 +49,13 @@ const App = () => {
 			setUsername("");
 			setPassword("");
 		} catch (exception) {
-			console.error(exception.message);
+			setNotificationMessage({
+				type: "failure",
+				message: "Wrong username or password",
+			});
+			setTimeout(() => {
+				setNotificationMessage(null);
+			}, 5000);
 		}
 	};
 
@@ -70,13 +78,22 @@ const App = () => {
 
 		const addedBlog = await blogService.create(newBlog);
 		setBlogs(blogs.concat(addedBlog));
+
+		setNotificationMessage({
+			type: "success",
+			message: `Added a new blog "${blogTitle}" by ${blogAuthor}`,
+		});
+		setTimeout(() => {
+			setNotificationMessage(null);
+		}, 5000);
+
 		setBlogTitle("");
 		setBlogAuthor("");
 		setBlogUrl("");
 	};
 
 	const loginForm = () => (
-		<div>
+		<div className="login-form">
 			<h2>Log in to application</h2>
 			<form onSubmit={handleLogin}>
 				<div>
@@ -103,7 +120,7 @@ const App = () => {
 	);
 
 	const blogForm = () => (
-		<div>
+		<div className="create-new-blog-form">
 			<h2>Create a new blog</h2>
 			<form onSubmit={addBlog}>
 				<div>
@@ -139,20 +156,30 @@ const App = () => {
 	);
 
 	return (
-		<>
+		<div className="wrapper">
+			<Notification
+				message={
+					notificationMessage ? notificationMessage.message : null
+				}
+				type={notificationMessage ? notificationMessage.type : null}
+			/>
 			{!user && loginForm()}
 			{user && (
-				<div>
-					<h2>Blogs</h2>
-					<span>{user.name} logged in</span>{" "}
-					<button onClick={handleLogout}>Logout</button>
+				<>
+					<h1>Blogs</h1>
+					<div className="logout-block">
+						<span>{user.name} logged in</span>{" "}
+						<button onClick={handleLogout}>Logout</button>
+					</div>
 					{blogForm()}
-					{blogs.map((blog) => (
-						<Blog key={blog.id} blog={blog} />
-					))}
-				</div>
+					<div className="blogs-block">
+						{blogs.map((blog) => (
+							<Blog key={blog.id} blog={blog} />
+						))}
+					</div>
+				</>
 			)}
-		</>
+		</div>
 	);
 };
 
