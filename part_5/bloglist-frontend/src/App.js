@@ -5,6 +5,10 @@ import loginService from "./services/login";
 
 const App = () => {
 	const [blogs, setBlogs] = useState([]);
+	const [blogTitle, setBlogTitle] = useState("");
+	const [blogAuthor, setBlogAuthor] = useState("");
+	const [blogUrl, setBlogUrl] = useState("");
+
 	const [username, setUsername] = useState("");
 	const [password, setPassword] = useState("");
 	const [user, setUser] = useState(null);
@@ -20,6 +24,7 @@ const App = () => {
 		if (loggedUserJSON) {
 			const user = JSON.parse(loggedUserJSON);
 			setUser(user);
+			blogService.setToken(user.token);
 		}
 	}, []);
 
@@ -36,6 +41,8 @@ const App = () => {
 				"loggedBloglistAppUser",
 				JSON.stringify(user)
 			);
+
+			blogService.setToken(user.token);
 			setUser(user);
 			setUsername("");
 			setPassword("");
@@ -47,6 +54,25 @@ const App = () => {
 	const handleLogout = () => {
 		window.localStorage.removeItem("loggedBloglistAppUser");
 		setUser(null);
+		setBlogTitle("");
+		setBlogAuthor("");
+		setBlogUrl("");
+	};
+
+	const addBlog = async (event) => {
+		event.preventDefault();
+
+		const newBlog = {
+			title: blogTitle,
+			author: blogAuthor,
+			url: blogUrl,
+		};
+
+		const addedBlog = await blogService.create(newBlog);
+		setBlogs(blogs.concat(addedBlog));
+		setBlogTitle("");
+		setBlogAuthor("");
+		setBlogUrl("");
 	};
 
 	const loginForm = () => (
@@ -58,7 +84,7 @@ const App = () => {
 					<input
 						type="text"
 						value={username}
-						name="Username"
+						name="username"
 						onChange={({ target }) => setUsername(target.value)}
 					/>
 				</div>
@@ -67,7 +93,7 @@ const App = () => {
 					<input
 						type="password"
 						value={password}
-						name="Password"
+						name="password"
 						onChange={({ target }) => setPassword(target.value)}
 					/>
 				</div>
@@ -76,20 +102,57 @@ const App = () => {
 		</div>
 	);
 
-	return (
+	const blogForm = () => (
 		<div>
+			<h2>Create a new blog</h2>
+			<form onSubmit={addBlog}>
+				<div>
+					Title:{" "}
+					<input
+						type="text"
+						value={blogTitle}
+						name="blog-title"
+						onChange={({ target }) => setBlogTitle(target.value)}
+					/>
+				</div>
+				<div>
+					Author:{" "}
+					<input
+						type="text"
+						value={blogAuthor}
+						name="blog-author"
+						onChange={({ target }) => setBlogAuthor(target.value)}
+					/>
+				</div>
+				<div>
+					Url:{" "}
+					<input
+						type="text"
+						value={blogUrl}
+						name="blog-url"
+						onChange={({ target }) => setBlogUrl(target.value)}
+					/>
+				</div>
+				<button type="submit">Create</button>
+			</form>
+		</div>
+	);
+
+	return (
+		<>
 			{!user && loginForm()}
 			{user && (
 				<div>
 					<h2>Blogs</h2>
 					<span>{user.name} logged in</span>{" "}
 					<button onClick={handleLogout}>Logout</button>
+					{blogForm()}
 					{blogs.map((blog) => (
 						<Blog key={blog.id} blog={blog} />
 					))}
 				</div>
 			)}
-		</div>
+		</>
 	);
 };
 
