@@ -64,13 +64,14 @@ const App = () => {
 	};
 
 	const addBlog = async (newBlog) => {
-		const addedBlog = await blogService.create(newBlog);
-		setBlogs(blogs.concat(addedBlog));
+		await blogService.create(newBlog);
+		const updatedBlogs = await blogService.getAll();
+		setBlogs(updatedBlogs);
 		blogFormRef.current.toggleVisibility();
 
 		setNotificationMessage({
 			type: "success",
-			message: `Added a new blog "${addedBlog.title}" by ${addedBlog.author}`,
+			message: `Added a new blog "${newBlog.title}" by ${newBlog.author}`,
 		});
 		setTimeout(() => {
 			setNotificationMessage(null);
