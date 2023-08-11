@@ -1,11 +1,19 @@
 import { useState } from "react";
 
-const Blog = ({ blog }) => {
-	const { title, author, url, likes, user } = blog;
+const Blog = ({ blog, updateBlog }) => {
+	const { id, title, author, url, likes, user } = blog;
 	const [visible, setVisible] = useState(false);
 	const buttonLabel = visible ? "hide" : "view";
 
 	const toggleVisibility = () => setVisible(!visible);
+
+	const addLike = () => {
+		updateBlog(id, {
+			...blog,
+			likes: likes + 1,
+			user: user.id,
+		});
+	};
 
 	return (
 		<div className="blog">
@@ -17,7 +25,7 @@ const Blog = ({ blog }) => {
 				<div>
 					<a href={url}>{url}</a>
 					<p>
-						likes: {likes} <button>like</button>
+						likes: {likes} <button onClick={addLike}>like</button>
 					</p>
 					<p>{user.name}</p>
 				</div>
