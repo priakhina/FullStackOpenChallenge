@@ -84,6 +84,21 @@ const App = () => {
 		setBlogs(updatedBlogs);
 	};
 
+	const deleteBlog = async (id, blogToDelete) => {
+		await blogService.delete(id);
+
+		setNotificationMessage({
+			type: "success",
+			message: `Deleted "${blogToDelete.title}" by ${blogToDelete.author}`,
+		});
+		setTimeout(() => {
+			setNotificationMessage(null);
+		}, 5000);
+
+		const updatedBlogs = await blogService.getAll();
+		setBlogs(updatedBlogs);
+	};
+
 	const loginForm = () => (
 		<div className="login-form">
 			<h2>Log in to application</h2>
@@ -143,7 +158,9 @@ const App = () => {
 								<Blog
 									key={blog.id}
 									blog={blog}
+									loggedUser={user}
 									updateBlog={updateBlog}
+									deleteBlog={deleteBlog}
 								/>
 							))}
 					</div>
