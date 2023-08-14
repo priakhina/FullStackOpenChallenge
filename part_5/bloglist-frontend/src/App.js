@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import Blog from "./components/Blog";
 import BlogForm from "./components/BlogForm";
+import LoginForm from "./components/LoginForm";
 import Notification from "./components/Notification";
 import Togglable from "./components/Togglable";
 import blogService from "./services/blogs";
@@ -99,33 +100,6 @@ const App = () => {
 		setBlogs(updatedBlogs);
 	};
 
-	const loginForm = () => (
-		<div className="login-form">
-			<h2>Log in to application</h2>
-			<form onSubmit={handleLogin}>
-				<div>
-					Username:{" "}
-					<input
-						type="text"
-						value={username}
-						name="username"
-						onChange={({ target }) => setUsername(target.value)}
-					/>
-				</div>
-				<div>
-					Password:{" "}
-					<input
-						type="password"
-						value={password}
-						name="password"
-						onChange={({ target }) => setPassword(target.value)}
-					/>
-				</div>
-				<button type="submit">Login</button>
-			</form>
-		</div>
-	);
-
 	const blogFormRef = useRef();
 
 	const blogForm = () => (
@@ -142,7 +116,19 @@ const App = () => {
 				}
 				type={notificationMessage ? notificationMessage.type : null}
 			/>
-			{!user && loginForm()}
+			{!user && (
+				<LoginForm
+					username={username}
+					password={password}
+					handleUsernameChange={({ target }) =>
+						setUsername(target.value)
+					}
+					handlePasswordChange={({ target }) =>
+						setPassword(target.value)
+					}
+					handleSubmit={handleLogin}
+				/>
+			)}
 			{user && (
 				<>
 					<h1>Blogs</h1>
