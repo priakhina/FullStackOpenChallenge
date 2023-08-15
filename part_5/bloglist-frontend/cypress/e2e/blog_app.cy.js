@@ -39,4 +39,25 @@ describe("Blog app", function () {
 				.should("have.css", "background-color", "rgb(244, 67, 54)"); // rgb(244, 67, 54) or #f44336 is a dark red shade
 		});
 	});
+
+	describe("When logged in", function () {
+		beforeEach(function () {
+			cy.login({ username: "root", password: "secret" });
+		});
+
+		it("a blog can be created", function () {
+			cy.contains(/create a new blog/i).click();
+			/* eslint-disable quotes */
+			cy.get('input[name="blog-title"]').type("React patterns");
+			cy.get('input[name="blog-author"]').type("Michael Chan");
+			cy.get('input[name="blog-url"]').type("https://reactpatterns.com/");
+			cy.get('button[type="submit"]')
+				.contains(/create/i)
+				.click();
+			/* eslint-enable */
+			cy.get(".blogs-block > .blog")
+				.find(".blog-title")
+				.contains("React patterns");
+		});
+	});
 });
