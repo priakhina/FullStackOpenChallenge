@@ -1,6 +1,7 @@
 import React from "react";
 import "@testing-library/jest-dom";
 import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import Blog from "./Blog";
 
 const user = {
@@ -37,5 +38,17 @@ describe("<Blog />", () => {
 
 		const blogLikes = screen.queryByText("0");
 		expect(blogLikes).toBeNull();
+	});
+
+	test("renders the blog's URL and number of likes when the view button is clicked", async () => {
+		const user = userEvent.setup();
+		const viewButton = screen.getByRole("button", { name: /view/i });
+		await user.click(viewButton);
+
+		const blogUrl = container.querySelector(".blog-url");
+		expect(blogUrl).toHaveTextContent("https://reactpatterns.com/");
+
+		const blogLikes = container.querySelector(".blog-likes");
+		expect(blogLikes).toHaveTextContent("0");
 	});
 });
