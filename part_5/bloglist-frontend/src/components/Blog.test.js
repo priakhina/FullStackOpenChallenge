@@ -19,11 +19,19 @@ const blog = {
 	user,
 };
 
+const mockUpdateHandler = jest.fn();
+
 describe("<Blog />", () => {
 	let container;
 
 	beforeEach(() => {
-		container = render(<Blog blog={blog} loggedUser={user} />).container;
+		container = render(
+			<Blog
+				blog={blog}
+				loggedUser={user}
+				updateBlog={mockUpdateHandler}
+			/>
+		).container;
 	});
 
 	test("renders the blog's title and author but not its URL or number of likes by default", () => {
@@ -50,5 +58,20 @@ describe("<Blog />", () => {
 
 		const blogLikes = container.querySelector(".blog-likes");
 		expect(blogLikes).toHaveTextContent("0");
+	});
+
+	test("calls the event handler twice when the like button is clicked twice", async () => {
+		const user = userEvent.setup();
+		const viewButton = screen.getByRole("button", { name: /view/i });
+		await user.click(viewButton);
+
+		const likeButton = screen.getByRole("button", { name: /like/i });
+
+		const clickCounter = 2;
+		for (let i = 0; i < clickCounter; ++i) {
+			await user.click(likeButton);
+		}
+
+		expect(mockUpdateHandler.mock.calls).toHaveLength(clickCounter);
 	});
 });
