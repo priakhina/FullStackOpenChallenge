@@ -1,13 +1,13 @@
 describe("Blog app", function () {
 	beforeEach(function () {
-		cy.request("POST", "http://localhost:3003/api/testing/reset");
+		cy.request("POST", `${Cypress.env("BACKEND")}/testing/reset`);
 		const user = {
 			name: "Superuser",
 			username: "root",
 			password: "secret",
 		};
-		cy.request("POST", "http://localhost:3003/api/users/", user);
-		cy.visit("http://localhost:3000");
+		cy.request("POST", `${Cypress.env("BACKEND")}/users`, user);
+		cy.visit("");
 	});
 
 	it("shows the login form", function () {
