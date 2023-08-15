@@ -28,14 +28,18 @@ const Blog = ({ blog, loggedUser, updateBlog, deleteBlog }) => {
 	return (
 		<div className="blog">
 			<div>
-				<strong>{title}</strong> - <i>{author}</i>{" "}
+				<strong className="blog-title">{title}</strong> -{" "}
+				<i className="blog-author">{author}</i>{" "}
 				<button onClick={toggleVisibility}>{buttonLabel}</button>
 			</div>
 			{visible && (
 				<div>
-					<a href={url}>{url}</a>
+					<a className="blog-url" href={url}>
+						{url}
+					</a>
 					<p>
-						likes: {likes} <button onClick={addLike}>like</button>
+						likes: <span className="blog-likes">{likes}</span>{" "}
+						<button onClick={addLike}>like</button>
 					</p>
 					<p>{user.name}</p>
 					{user.username === loggedUser.username && (
