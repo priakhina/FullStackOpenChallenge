@@ -124,5 +124,29 @@ describe("Blog app", function () {
 					.should("not.exist");
 			});
 		});
+
+		describe("and multiple blogs exist with different number of likes", function () {
+			const unorderedLikes = [5, 10, 3, 7, 25];
+
+			beforeEach(function () {
+				const blogs = unorderedLikes.map((likes) => ({
+					...blog,
+					likes,
+				}));
+
+				blogs.forEach((blog) => cy.createBlog(blog));
+			});
+
+			it("blogs are ordered according to likes with the blog with the most likes being first", function () {
+				const orderedLikes = unorderedLikes.sort((a, b) => b - a);
+
+				cy.get(".blogs-block > .blog").each(($el, index) => {
+					cy.wrap($el).find("button").contains(/view/i).click();
+					cy.wrap($el)
+						.find(".blog-likes")
+						.should("contain", orderedLikes[index]);
+				});
+			});
+		});
 	});
 });

@@ -34,11 +34,11 @@ Cypress.Commands.add("login", ({ username, password }) => {
 	});
 });
 
-Cypress.Commands.add("createBlog", ({ author, title, url }) => {
+Cypress.Commands.add("createBlog", ({ author, title, url, likes }) => {
 	cy.request({
 		url: "http://localhost:3003/api/blogs",
 		method: "POST",
-		body: { author, title, url },
+		body: { author, title, url, likes },
 		headers: {
 			"Authorization": `Bearer ${
 				JSON.parse(localStorage.getItem("loggedBloglistAppUser")).token
