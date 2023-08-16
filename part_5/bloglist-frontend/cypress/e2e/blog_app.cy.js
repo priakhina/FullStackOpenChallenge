@@ -98,6 +98,31 @@ describe("Blog app", function () {
 				);
 				cy.get(".blogs-block").contains(blog.title).should("not.exist");
 			});
+
+			it("only the creator can see the delete button of a blog", function () {
+				cy.get("button").contains(/view/i).click();
+				cy.get("button").contains(/delete/i);
+				cy.get("button")
+					.contains(/logout/i)
+					.click();
+
+				const anotherUser = {
+					name: "Anotheruser",
+					username: "imposter",
+					password: "somesecretpassword",
+				};
+				cy.request(
+					"POST",
+					`${Cypress.env("BACKEND")}/users`,
+					anotherUser
+				);
+				cy.login(anotherUser);
+
+				cy.get("button").contains(/view/i).click();
+				cy.get("button")
+					.contains(/delete/i)
+					.should("not.exist");
+			});
 		});
 	});
 });
