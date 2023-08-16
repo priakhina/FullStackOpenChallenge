@@ -63,7 +63,7 @@ describe("Blog app", function () {
 
 	describe("When logged in", function () {
 		beforeEach(function () {
-			cy.login({ username: user.username, password: user.password });
+			cy.login(user);
 		});
 
 		it("a blog can be created", function () {
@@ -76,7 +76,7 @@ describe("Blog app", function () {
 
 		describe("and a blog exists", function () {
 			beforeEach(function () {
-				cy.createBlog({ ...blog });
+				cy.createBlog(blog);
 			});
 
 			it("a blog can be liked", function () {
