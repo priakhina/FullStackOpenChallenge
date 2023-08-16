@@ -36,15 +36,15 @@ describe("<Blog />", () => {
 
 	test("renders the blog's title and author but not its URL or number of likes by default", () => {
 		const blogTitle = container.querySelector(".blog-title");
-		expect(blogTitle).toHaveTextContent("React patterns");
+		expect(blogTitle).toHaveTextContent(blog.title);
 
 		const blogAuthor = container.querySelector(".blog-author");
-		expect(blogAuthor).toHaveTextContent("Michael Chan");
+		expect(blogAuthor).toHaveTextContent(blog.author);
 
-		const blogUrl = screen.queryByText("https://reactpatterns.com/");
+		const blogUrl = screen.queryByText(blog.url);
 		expect(blogUrl).toBeNull();
 
-		const blogLikes = screen.queryByText("0");
+		const blogLikes = screen.queryByText(blog.likes);
 		expect(blogLikes).toBeNull();
 	});
 
@@ -54,10 +54,10 @@ describe("<Blog />", () => {
 		await user.click(viewButton);
 
 		const blogUrl = container.querySelector(".blog-url");
-		expect(blogUrl).toHaveTextContent("https://reactpatterns.com/");
+		expect(blogUrl).toHaveTextContent(blog.url);
 
 		const blogLikes = container.querySelector(".blog-likes");
-		expect(blogLikes).toHaveTextContent("0");
+		expect(blogLikes).toHaveTextContent(blog.likes);
 	});
 
 	test("calls the event handler twice when the like button is clicked twice", async () => {
