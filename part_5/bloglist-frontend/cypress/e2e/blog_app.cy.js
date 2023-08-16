@@ -1,11 +1,37 @@
+const user = {
+	name: "Superuser",
+	username: "root",
+	password: "secret",
+};
+
+const blog = {
+	title: "React patterns",
+	author: "Michael Chan",
+	url: "https://reactpatterns.com/",
+};
+
+const loginUser = ({ username, password }) => {
+	/* eslint-disable quotes */
+	cy.get('input[name="username"]').type(username);
+	cy.get('input[name="password"]').type(password);
+	cy.get('button[type="submit"]').click();
+	/* eslint-enable */
+};
+
+const createBlog = ({ title, author, url }) => {
+	/* eslint-disable quotes */
+	cy.get('input[name="blog-title"]').type(title);
+	cy.get('input[name="blog-author"]').type(author);
+	cy.get('input[name="blog-url"]').type(url);
+	cy.get('button[type="submit"]')
+		.contains(/create/i)
+		.click();
+	/* eslint-enable */
+};
+
 describe("Blog app", function () {
 	beforeEach(function () {
 		cy.request("POST", `${Cypress.env("BACKEND")}/testing/reset`);
-		const user = {
-			name: "Superuser",
-			username: "root",
-			password: "secret",
-		};
 		cy.request("POST", `${Cypress.env("BACKEND")}/users`, user);
 		cy.visit("");
 	});
@@ -16,20 +42,15 @@ describe("Blog app", function () {
 
 	describe("Login", function () {
 		it("succeeds with correct credentials", function () {
-			/* eslint-disable quotes */
-			cy.get('input[name="username"]').type("root");
-			cy.get('input[name="password"]').type("secret");
-			cy.get('button[type="submit"]').click();
-			/* eslint-enable */
-			cy.contains("Superuser logged in");
+			loginUser(user);
+			cy.contains(`${user.name} logged in`);
 		});
 
 		it("fails with wrong credentials", function () {
-			/* eslint-disable quotes */
-			cy.get('input[name="username"]').type("root");
-			cy.get('input[name="password"]').type("wrongpassword");
-			cy.get('button[type="submit"]').click();
-			/* eslint-enable */
+			loginUser({
+				username: user.username,
+				password: "wrongpassword",
+			});
 			cy.get(".notification.failure").should(
 				"contain",
 				/wrong username or password/i
@@ -42,31 +63,20 @@ describe("Blog app", function () {
 
 	describe("When logged in", function () {
 		beforeEach(function () {
-			cy.login({ username: "root", password: "secret" });
+			cy.login({ username: user.username, password: user.password });
 		});
 
 		it("a blog can be created", function () {
 			cy.contains(/create a new blog/i).click();
-			/* eslint-disable quotes */
-			cy.get('input[name="blog-title"]').type("React patterns");
-			cy.get('input[name="blog-author"]').type("Michael Chan");
-			cy.get('input[name="blog-url"]').type("https://reactpatterns.com/");
-			cy.get('button[type="submit"]')
-				.contains(/create/i)
-				.click();
-			/* eslint-enable */
+			createBlog(blog);
 			cy.get(".blogs-block > .blog")
 				.find(".blog-title")
-				.contains("React patterns");
+				.contains(blog.title);
 		});
 
 		describe("and a blog exists", function () {
 			beforeEach(function () {
-				cy.createBlog({
-					title: "React patterns",
-					author: "Michael Chan",
-					url: "https://reactpatterns.com/",
-				});
+				cy.createBlog({ ...blog });
 			});
 
 			it("a blog can be liked", function () {
