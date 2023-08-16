@@ -86,6 +86,18 @@ describe("Blog app", function () {
 				cy.get("button").contains(/like/i).click();
 				cy.get(".blog-likes").contains("1");
 			});
+
+			it("a blog can be deleted by the user who created it", function () {
+				cy.get("button").contains(/view/i).click();
+				cy.get("button")
+					.contains(/delete/i)
+					.click();
+				cy.get(".notification.success").should(
+					"contain",
+					`Deleted "${blog.title}" by ${blog.author}`
+				);
+				cy.get(".blogs-block").contains(blog.title).should("not.exist");
+			});
 		});
 	});
 });
