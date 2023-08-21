@@ -13,4 +13,10 @@ const createNew = async (content) => {
 	return response.data;
 };
 
-export default { getAll, createNew };
+const update = async (id, updatedAnecdote) => {
+	const response = await axios.put(`${baseUrl}/${id}`, updatedAnecdote);
+	return response.data;
+};
+
+// eslint-disable-next-line import/no-anonymous-default-export
+export default { getAll, createNew, update };
