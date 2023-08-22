@@ -4,7 +4,7 @@ const Anecdote = ({ anecdote }) => {
 	return (
 		<div>
 			<h2>
-				{content} by {author}
+				"{content}" by {author}
 			</h2>
 			<p>
 				has {votes} {votes === 1 ? "vote" : "votes"}
