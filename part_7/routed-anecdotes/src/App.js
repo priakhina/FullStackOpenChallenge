@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Routes, Route, useMatch } from "react-router-dom";
 
 import Menu from "./components/Menu";
+import Notification from "./components/Notification";
 import AnecdoteList from "./components/AnecdoteList";
 import Anecdote from "./components/Anecdote";
 import About from "./components/About";
@@ -33,9 +34,15 @@ const App = () => {
 		? anecdotes.find((a) => a.id === Number(match.params.id))
 		: null;
 
+	const displayNotification = (content, timeout = 5) => {
+		setNotification(content);
+		setTimeout(() => setNotification(""), timeout * 1000);
+	};
+
 	const addNew = (anecdote) => {
 		anecdote.id = Math.round(Math.random() * 10000);
 		setAnecdotes(anecdotes.concat(anecdote));
+		displayNotification(`Created a new anecdote "${anecdote.content}"`);
 	};
 
 	const anecdoteById = (id) => anecdotes.find((a) => a.id === id);
@@ -55,6 +62,7 @@ const App = () => {
 		<>
 			<h1>Software anecdotes</h1>
 			<Menu />
+			<Notification notification={notification} />
 			<Routes>
 				<Route path="/" element={<AnecdoteList anecdotes={anecdotes} />} />
 				<Route
