@@ -1,9 +1,27 @@
+import { useReducer } from "react";
 import { useQuery, useMutation, useQueryClient } from "react-query";
 import AnecdoteForm from "./components/AnecdoteForm";
 import Notification from "./components/Notification";
+import NotificationContext from "./NotificationContext";
 import { getAnecdotes, updateAnecdote } from "./requests";
 
+const notificationReducer = (state, action) => {
+	switch (action.type) {
+		case "SET_MESSAGE":
+			return action.payload;
+		case "CLEAR_MESSAGE":
+			return "";
+		default:
+			return state;
+	}
+};
+
 const App = () => {
+	const [notification, notificationDispatch] = useReducer(
+		notificationReducer,
+		""
+	);
+
 	const queryClient = useQueryClient();
 
 	const updateAnecdoteMutation = useMutation(updateAnecdote, {
@@ -22,6 +40,11 @@ const App = () => {
 			...anecdote,
 			votes: anecdote.votes + 1,
 		});
+		notificationDispatch({
+			type: "SET_MESSAGE",
+			payload: `Upvoted "${anecdote.content}"`,
+		});
+		setTimeout(() => notificationDispatch({ type: "CLEAR_MESSAGE" }), 5000);
 	};
 
 	const {
@@ -48,7 +71,9 @@ const App = () => {
 	}
 
 	return (
-		<div>
+		<NotificationContext.Provider
+			value={[notification, notificationDispatch]}
+		>
 			<h3>Anecdote app</h3>
 			<Notification />
 			<AnecdoteForm />
@@ -64,7 +89,7 @@ const App = () => {
 					</div>
 				</div>
 			))}
-		</div>
+		</NotificationContext.Provider>
 	);
 };
 
