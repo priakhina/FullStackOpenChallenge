@@ -29,6 +29,12 @@ const AnecdoteList = ({ anecdotes }) => {
 				a.id !== updatedAnecdote.id ? a : updatedAnecdote
 			);
 			queryClient.setQueryData("anecdotes", updatedAnecdotes);
+
+			dispatch({
+				type: "SET_MESSAGE",
+				payload: `Upvoted "${updatedAnecdote.content}"`,
+			});
+			setTimeout(() => dispatch({ type: "CLEAR_MESSAGE" }), 5000);
 		},
 	});
 
@@ -37,11 +43,6 @@ const AnecdoteList = ({ anecdotes }) => {
 			...anecdote,
 			votes: anecdote.votes + 1,
 		});
-		dispatch({
-			type: "SET_MESSAGE",
-			payload: `Upvoted "${anecdote.content}"`,
-		});
-		setTimeout(() => dispatch({ type: "CLEAR_MESSAGE" }), 5000);
 	};
 
 	return (

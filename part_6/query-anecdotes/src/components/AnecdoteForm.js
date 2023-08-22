@@ -21,6 +21,19 @@ const AnecdoteForm = () => {
 				"anecdotes",
 				anecdotes.concat(newAnecdote)
 			);
+
+			dispatch({
+				type: "SET_MESSAGE",
+				payload: `Created a new anecdote "${newAnecdote.content}"`,
+			});
+			setTimeout(() => dispatch({ type: "CLEAR_MESSAGE" }), 5000);
+		},
+		onError: (error) => {
+			dispatch({
+				type: "SET_MESSAGE",
+				payload: `${error.response.data.error}`,
+			});
+			setTimeout(() => dispatch({ type: "CLEAR_MESSAGE" }), 5000);
 		},
 	});
 
@@ -29,11 +42,6 @@ const AnecdoteForm = () => {
 		const content = event.target.anecdote.value;
 		event.target.anecdote.value = "";
 		newAnecdoteMutation.mutate({ content, votes: 0 });
-		dispatch({
-			type: "SET_MESSAGE",
-			payload: `Created a new anecdote "${content}"`,
-		});
-		setTimeout(() => dispatch({ type: "CLEAR_MESSAGE" }), 5000);
 	};
 
 	return (
