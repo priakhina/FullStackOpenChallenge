@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+
 import Menu from "./components/Menu";
 import AnecdoteList from "./components/AnecdoteList";
 import About from "./components/About";
@@ -44,14 +46,18 @@ const App = () => {
 	};
 
 	return (
-		<div>
+		<>
 			<h1>Software anecdotes</h1>
-			<Menu />
-			<AnecdoteList anecdotes={anecdotes} />
-			<About />
-			<CreateNew addNew={addNew} />
+			<Router>
+				<Menu />
+				<Routes>
+					<Route path="/" element={<AnecdoteList anecdotes={anecdotes} />} />
+					<Route path="/about" element={<About />} />
+					<Route path="/create" element={<CreateNew addNew={addNew} />} />
+				</Routes>
+			</Router>
 			<Footer />
-		</div>
+		</>
 	);
 };
 
