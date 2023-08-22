@@ -1,28 +1,11 @@
-import { useReducer } from "react";
 import { useQuery } from "react-query";
 import AnecdoteForm from "./components/AnecdoteForm";
 import AnecdoteList from "./components/AnecdoteList";
 import Notification from "./components/Notification";
-import NotificationContext from "./NotificationContext";
+import { NotificationContextProvider } from "./NotificationContext";
 import { getAnecdotes } from "./requests";
 
-const notificationReducer = (state, action) => {
-	switch (action.type) {
-		case "SET_MESSAGE":
-			return action.payload;
-		case "CLEAR_MESSAGE":
-			return "";
-		default:
-			return state;
-	}
-};
-
 const App = () => {
-	const [notification, notificationDispatch] = useReducer(
-		notificationReducer,
-		""
-	);
-
 	const {
 		isLoading,
 		isError,
@@ -47,14 +30,12 @@ const App = () => {
 	}
 
 	return (
-		<NotificationContext.Provider
-			value={[notification, notificationDispatch]}
-		>
+		<NotificationContextProvider>
 			<h3>Anecdote app</h3>
 			<Notification />
 			<AnecdoteForm />
 			<AnecdoteList anecdotes={anecdotes} />
-		</NotificationContext.Provider>
+		</NotificationContextProvider>
 	);
 };
 

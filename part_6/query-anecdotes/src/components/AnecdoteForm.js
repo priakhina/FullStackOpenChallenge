@@ -1,10 +1,9 @@
-import { useContext } from "react";
 import { useMutation, useQueryClient } from "react-query";
 import { createAnecdote } from "../requests";
-import NotificationContext from "../NotificationContext";
+import { useNotificationDispatch } from "../NotificationContext";
 
 const AnecdoteForm = () => {
-	const [notification, dispatch] = useContext(NotificationContext);
+	const dispatch = useNotificationDispatch();
 
 	const queryClient = useQueryClient();
 

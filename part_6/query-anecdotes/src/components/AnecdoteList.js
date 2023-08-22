@@ -1,7 +1,6 @@
-import { useContext } from "react";
 import { useMutation, useQueryClient } from "react-query";
 import { updateAnecdote } from "../requests";
-import NotificationContext from "../NotificationContext";
+import { useNotificationDispatch } from "../NotificationContext";
 
 const Anecdote = ({ anecdote, handleVote }) => {
 	const { content, votes } = anecdote;
@@ -18,7 +17,7 @@ const Anecdote = ({ anecdote, handleVote }) => {
 };
 
 const AnecdoteList = ({ anecdotes }) => {
-	const [notification, dispatch] = useContext(NotificationContext);
+	const dispatch = useNotificationDispatch();
 
 	const queryClient = useQueryClient();
 
