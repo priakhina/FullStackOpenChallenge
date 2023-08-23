@@ -17,8 +17,25 @@ const useField = (type) => {
 
 const useCountry = (name) => {
 	const [country, setCountry] = useState(null);
+	const baseUrl = "https://studies.cs.helsinki.fi/restcountries/api";
 
-	useEffect(() => {});
+	useEffect(() => {
+		const countryName = name.toLowerCase().trim();
+
+		if (countryName) {
+			axios
+				.get(`${baseUrl}/name/${countryName}`)
+				.then((response) => {
+					setCountry({ ...response.data, found: true });
+				})
+				.catch((error) => {
+					console.error(error);
+					setCountry({ name: name.trim(), found: false });
+				});
+		} else {
+			setCountry(null);
+		}
+	}, [name]);
 
 	return country;
 };
@@ -29,19 +46,15 @@ const Country = ({ country }) => {
 	}
 
 	if (!country.found) {
-		return <div>not found...</div>;
+		return <div>Country "{country.name}" is not found...</div>;
 	}
 
 	return (
 		<div>
-			<h3>{country.data.name} </h3>
-			<div>capital {country.data.capital} </div>
-			<div>population {country.data.population}</div>
-			<img
-				src={country.data.flag}
-				height="100"
-				alt={`flag of ${country.data.name}`}
-			/>
+			<h3>{country.name.common}</h3>
+			<div>Capital: {country.capital}</div>
+			<div>Population: {country.population.toLocaleString("en-US")}</div>
+			<img src={country.flags.png} height="100" alt={country.flags.alt} />
 		</div>
 	);
 };
@@ -59,10 +72,8 @@ const App = () => {
 	return (
 		<div>
 			<form onSubmit={fetch}>
-				<input {...nameInput} />
-				<button>find</button>
+				<input {...nameInput} /> <button>Find</button>
 			</form>
-
 			<Country country={country} />
 		</div>
 	);
