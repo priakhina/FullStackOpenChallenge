@@ -3,9 +3,9 @@ import { useState } from "react";
 export const useField = (name, type = "text") => {
 	const [value, setValue] = useState("");
 
-	const onChange = (e) => {
-		setValue(e.target.value);
-	};
+	const onChange = (e) => setValue(e.target.value);
 
-	return { name, type, value, onChange };
+	const reset = () => setValue("");
+
+	return { name, type, value, onChange, reset };
 };
