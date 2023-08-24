@@ -69,9 +69,7 @@ describe("Blog app", function () {
 		it("a blog can be created", function () {
 			cy.contains(/create a new blog/i).click();
 			createBlog(blog);
-			cy.get(".blogs-block > .blog")
-				.find(".blog-title")
-				.contains(blog.title);
+			cy.get(".blogs-block > .blog").find(".blog-title").contains(blog.title);
 		});
 
 		describe("and a blog exists", function () {
@@ -111,11 +109,7 @@ describe("Blog app", function () {
 					username: "imposter",
 					password: "somesecretpassword",
 				};
-				cy.request(
-					"POST",
-					`${Cypress.env("BACKEND")}/users`,
-					anotherUser
-				);
+				cy.request("POST", `${Cypress.env("BACKEND")}/users`, anotherUser);
 				cy.login(anotherUser);
 
 				cy.get("button").contains(/view/i).click();

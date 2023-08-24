@@ -20,9 +20,7 @@ const App = () => {
 	}, []);
 
 	useEffect(() => {
-		const loggedUserJSON = window.localStorage.getItem(
-			"loggedBloglistAppUser"
-		);
+		const loggedUserJSON = window.localStorage.getItem("loggedBloglistAppUser");
 		if (loggedUserJSON) {
 			const user = JSON.parse(loggedUserJSON);
 			setUser(user);
@@ -111,21 +109,15 @@ const App = () => {
 	return (
 		<div className="wrapper">
 			<Notification
-				message={
-					notificationMessage ? notificationMessage.message : null
-				}
+				message={notificationMessage ? notificationMessage.message : null}
 				type={notificationMessage ? notificationMessage.type : null}
 			/>
 			{!user && (
 				<LoginForm
 					username={username}
 					password={password}
-					handleUsernameChange={({ target }) =>
-						setUsername(target.value)
-					}
-					handlePasswordChange={({ target }) =>
-						setPassword(target.value)
-					}
+					handleUsernameChange={({ target }) => setUsername(target.value)}
+					handlePasswordChange={({ target }) => setPassword(target.value)}
 					handleSubmit={handleLogin}
 				/>
 			)}

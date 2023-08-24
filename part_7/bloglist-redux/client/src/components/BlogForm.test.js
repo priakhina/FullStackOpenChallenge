@@ -16,18 +16,14 @@ describe("<BlogForm />", () => {
 	let container;
 
 	beforeEach(() => {
-		container = render(
-			<BlogForm createBlog={mockCreateHandler} />
-		).container;
+		container = render(<BlogForm createBlog={mockCreateHandler} />).container;
 	});
 
 	test("calls the event handler with the right details when a new blog is created", async () => {
 		const user = userEvent.setup();
 
 		/* eslint-disable quotes */
-		const blogTitleInput = container.querySelector(
-			'input[name="blog-title"]'
-		);
+		const blogTitleInput = container.querySelector('input[name="blog-title"]');
 		const blogAuthorInput = container.querySelector(
 			'input[name="blog-author"]'
 		);

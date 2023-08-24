@@ -26,11 +26,7 @@ describe("<Blog />", () => {
 
 	beforeEach(() => {
 		container = render(
-			<Blog
-				blog={blog}
-				loggedUser={user}
-				updateBlog={mockUpdateHandler}
-			/>
+			<Blog blog={blog} loggedUser={user} updateBlog={mockUpdateHandler} />
 		).container;
 	});
 

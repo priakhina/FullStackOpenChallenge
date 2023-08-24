@@ -190,10 +190,7 @@ describe("deletion of a blog", () => {
 			(blog) => blog.title === newBlog.title
 		);
 
-		await api
-			.delete(`/api/blogs/${blogToDelete.id}`)
-			.set(headers)
-			.expect(204);
+		await api.delete(`/api/blogs/${blogToDelete.id}`).set(headers).expect(204);
 
 		const blogsAtEnd = await helper.blogsInDb();
 		expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length);

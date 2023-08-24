@@ -33,7 +33,8 @@ blogsRouter.delete("/:id", userExtractor, async (request, response) => {
 
 	if (blog.user.toString() !== user.id.toString()) {
 		return response.status(401).json({
-			error: "deleting a blog is attempted by an invalid user: a blog can be deleted only by the user who added the blog",
+			error:
+				"deleting a blog is attempted by an invalid user: a blog can be deleted only by the user who added the blog",
 		});
 	}
 
