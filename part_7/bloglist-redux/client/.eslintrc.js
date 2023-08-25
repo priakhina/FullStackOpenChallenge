@@ -16,7 +16,13 @@ module.exports = {
 	},
 	"plugins": ["react", "jest", "cypress"],
 	"rules": {
-		"indent": ["error", "tab"],
+		"indent": [
+			"error",
+			"tab",
+			{
+				"SwitchCase": 1,
+			},
+		],
 		"linebreak-style": ["error", "unix"],
 		"quotes": ["error", "double"],
 		"semi": ["error", "always"],
