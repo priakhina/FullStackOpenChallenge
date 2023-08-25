@@ -1,4 +1,6 @@
 import { useState, useEffect, useRef } from "react";
+import { useDispatch } from "react-redux";
+import { setMessage, clearMessage } from "./reducers/notificationReducer";
 import Blog from "./components/Blog";
 import BlogForm from "./components/BlogForm";
 import LoginForm from "./components/LoginForm";
@@ -9,11 +11,11 @@ import loginService from "./services/login";
 
 const App = () => {
 	const [blogs, setBlogs] = useState([]);
-	const [notificationMessage, setNotificationMessage] = useState(null);
-
 	const [username, setUsername] = useState("");
 	const [password, setPassword] = useState("");
 	const [user, setUser] = useState(null);
+
+	const dispatch = useDispatch();
 
 	useEffect(() => {
 		blogService.getAll().then((blogs) => setBlogs(blogs));
@@ -47,13 +49,8 @@ const App = () => {
 			setUsername("");
 			setPassword("");
 		} catch (exception) {
-			setNotificationMessage({
-				type: "failure",
-				message: "Wrong username or password",
-			});
-			setTimeout(() => {
-				setNotificationMessage(null);
-			}, 5000);
+			dispatch(setMessage("failure", "Wrong username or password"));
+			setTimeout(() => dispatch(clearMessage()), 5000);
 		}
 	};
 
@@ -68,13 +65,13 @@ const App = () => {
 		setBlogs(updatedBlogs);
 		blogFormRef.current.toggleVisibility();
 
-		setNotificationMessage({
-			type: "success",
-			message: `Added a new blog "${newBlog.title}" by ${newBlog.author}`,
-		});
-		setTimeout(() => {
-			setNotificationMessage(null);
-		}, 5000);
+		dispatch(
+			setMessage(
+				"success",
+				`Added a new blog "${newBlog.title}" by ${newBlog.author}`
+			)
+		);
+		setTimeout(() => dispatch(clearMessage()), 5000);
 	};
 
 	const updateBlog = async (id, updatedBlog) => {
@@ -86,13 +83,13 @@ const App = () => {
 	const deleteBlog = async (id, blogToDelete) => {
 		await blogService.delete(id);
 
-		setNotificationMessage({
-			type: "success",
-			message: `Deleted "${blogToDelete.title}" by ${blogToDelete.author}`,
-		});
-		setTimeout(() => {
-			setNotificationMessage(null);
-		}, 5000);
+		dispatch(
+			setMessage(
+				"success",
+				`Deleted "${blogToDelete.title}" by ${blogToDelete.author}`
+			)
+		);
+		setTimeout(() => dispatch(clearMessage()), 5000);
 
 		const updatedBlogs = await blogService.getAll();
 		setBlogs(updatedBlogs);
@@ -108,10 +105,7 @@ const App = () => {
 
 	return (
 		<div className="wrapper">
-			<Notification
-				message={notificationMessage ? notificationMessage.message : null}
-				type={notificationMessage ? notificationMessage.type : null}
-			/>
+			<Notification />
 			{!user && (
 				<LoginForm
 					username={username}

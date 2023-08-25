@@ -1,4 +1,9 @@
-const Notification = ({ message, type }) => {
+import { useSelector } from "react-redux";
+
+const Notification = () => {
+	const notification = useSelector((state) => state);
+	const { type, message } = notification;
+
 	const className = `notification ${type}`;
 
 	return (
