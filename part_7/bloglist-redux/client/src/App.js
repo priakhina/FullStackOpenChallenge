@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useDispatch } from "react-redux";
-import { setMessage, clearMessage } from "./reducers/notificationReducer";
+import { setNotification } from "./reducers/notificationReducer";
 import Blog from "./components/Blog";
 import BlogForm from "./components/BlogForm";
 import LoginForm from "./components/LoginForm";
@@ -49,8 +49,7 @@ const App = () => {
 			setUsername("");
 			setPassword("");
 		} catch (exception) {
-			dispatch(setMessage("failure", "Wrong username or password"));
-			setTimeout(() => dispatch(clearMessage()), 5000);
+			dispatch(setNotification("failure", "Wrong username or password"));
 		}
 	};
 
@@ -66,12 +65,11 @@ const App = () => {
 		blogFormRef.current.toggleVisibility();
 
 		dispatch(
-			setMessage(
+			setNotification(
 				"success",
 				`Added a new blog "${newBlog.title}" by ${newBlog.author}`
 			)
 		);
-		setTimeout(() => dispatch(clearMessage()), 5000);
 	};
 
 	const updateBlog = async (id, updatedBlog) => {
@@ -84,12 +82,11 @@ const App = () => {
 		await blogService.delete(id);
 
 		dispatch(
-			setMessage(
+			setNotification(
 				"success",
 				`Deleted "${blogToDelete.title}" by ${blogToDelete.author}`
 			)
 		);
-		setTimeout(() => dispatch(clearMessage()), 5000);
 
 		const updatedBlogs = await blogService.getAll();
 		setBlogs(updatedBlogs);
