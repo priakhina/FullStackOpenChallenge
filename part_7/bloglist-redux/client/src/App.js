@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { setBlogs, createBlog } from "./reducers/blogReducer";
+import { setBlogs, createBlog, initializeBlogs } from "./reducers/blogReducer";
 import { setNotification } from "./reducers/notificationReducer";
 import Blog from "./components/Blog";
 import BlogForm from "./components/BlogForm";
@@ -21,10 +21,8 @@ const App = () => {
 	);
 
 	useEffect(() => {
-		blogService.getAll().then((blogs) => dispatch(setBlogs(blogs)));
-	}, []);
+		dispatch(initializeBlogs());
 
-	useEffect(() => {
 		const loggedUserJSON = window.localStorage.getItem("loggedBloglistAppUser");
 		if (loggedUserJSON) {
 			const user = JSON.parse(loggedUserJSON);
@@ -62,8 +60,7 @@ const App = () => {
 	};
 
 	const addBlog = async (newBlog) => {
-		const blog = await blogService.create(newBlog);
-		dispatch(createBlog({ blog, user }));
+		dispatch(createBlog(newBlog, user));
 		blogFormRef.current.toggleVisibility();
 
 		dispatch(
@@ -77,7 +74,7 @@ const App = () => {
 	const updateBlog = async (id, updatedBlog) => {
 		await blogService.update(id, updatedBlog);
 		const updatedBlogs = await blogService.getAll();
-		setBlogs(updatedBlogs);
+		dispatch(setBlogs(updatedBlogs));
 	};
 
 	const deleteBlog = async (id, blogToDelete) => {
@@ -91,7 +88,7 @@ const App = () => {
 		);
 
 		const updatedBlogs = await blogService.getAll();
-		setBlogs(updatedBlogs);
+		dispatch(setBlogs(updatedBlogs));
 	};
 
 	const blogFormRef = useRef();
