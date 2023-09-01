@@ -36,7 +36,7 @@ const App = () => {
 		}
 	}, []);
 
-	const handleLogin = async (event) => {
+	const handleUserLogin = async (event) => {
 		event.preventDefault();
 
 		try {
@@ -59,12 +59,12 @@ const App = () => {
 		}
 	};
 
-	const handleLogout = () => {
+	const handleUserLogout = () => {
 		window.localStorage.removeItem("loggedBloglistAppUser");
 		setUser(null);
 	};
 
-	const addBlog = (newBlog) => {
+	const handleBlogCreate = (newBlog) => {
 		dispatch(createBlog(newBlog, user));
 		blogFormRef.current.toggleVisibility();
 
@@ -94,7 +94,7 @@ const App = () => {
 
 	const blogForm = () => (
 		<Togglable buttonLabel="Create a new blog" ref={blogFormRef}>
-			<BlogForm createBlog={addBlog} />
+			<BlogForm onBlogCreate={handleBlogCreate} />
 		</Togglable>
 	);
 
@@ -105,9 +105,9 @@ const App = () => {
 				<LoginForm
 					username={username}
 					password={password}
-					handleUsernameChange={({ target }) => setUsername(target.value)}
-					handlePasswordChange={({ target }) => setPassword(target.value)}
-					handleSubmit={handleLogin}
+					onUsernameChange={({ target }) => setUsername(target.value)}
+					onPasswordChange={({ target }) => setPassword(target.value)}
+					onUserLogin={handleUserLogin}
 				/>
 			)}
 			{user && (
@@ -115,7 +115,7 @@ const App = () => {
 					<h1>Blogs</h1>
 					<div className="logout-block">
 						<span>{user.name} logged in</span>{" "}
-						<button onClick={handleLogout}>Logout</button>
+						<button onClick={handleUserLogout}>Logout</button>
 					</div>
 					{blogForm()}
 					<div className="blogs-block">
