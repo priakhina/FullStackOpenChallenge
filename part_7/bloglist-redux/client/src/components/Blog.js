@@ -1,14 +1,14 @@
 import { useState } from "react";
 
-const Blog = ({ blog, loggedUser, updateBlog, deleteBlog }) => {
-	const { id, title, author, url, likes, user } = blog;
+const Blog = ({ blog, loggedUser, onBlogUpdate, onBlogDelete }) => {
+	const { title, author, url, likes, user } = blog;
 	const [visible, setVisible] = useState(false);
 	const buttonLabel = visible ? "hide" : "view";
 
 	const toggleVisibility = () => setVisible(!visible);
 
 	const addLike = () => {
-		updateBlog(id, {
+		onBlogUpdate({
 			...blog,
 			likes: likes + 1,
 			user: user.id,
@@ -21,7 +21,7 @@ const Blog = ({ blog, loggedUser, updateBlog, deleteBlog }) => {
 		);
 
 		if (confirmedDelete) {
-			deleteBlog(id, blog);
+			onBlogDelete(blog);
 		}
 	};
 

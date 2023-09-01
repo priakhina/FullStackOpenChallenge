@@ -1,6 +1,11 @@
 import { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { setBlogs, createBlog, initializeBlogs } from "./reducers/blogReducer";
+import {
+	initializeBlogs,
+	createBlog,
+	updateBlog,
+	deleteBlog,
+} from "./reducers/blogReducer";
 import { setNotification } from "./reducers/notificationReducer";
 import Blog from "./components/Blog";
 import BlogForm from "./components/BlogForm";
@@ -59,7 +64,7 @@ const App = () => {
 		setUser(null);
 	};
 
-	const addBlog = async (newBlog) => {
+	const addBlog = (newBlog) => {
 		dispatch(createBlog(newBlog, user));
 		blogFormRef.current.toggleVisibility();
 
@@ -71,24 +76,18 @@ const App = () => {
 		);
 	};
 
-	const updateBlog = async (id, updatedBlog) => {
-		await blogService.update(id, updatedBlog);
-		const updatedBlogs = await blogService.getAll();
-		dispatch(setBlogs(updatedBlogs));
+	const handleBlogUpdate = (updatedBlog) => {
+		dispatch(updateBlog(updatedBlog));
 	};
 
-	const deleteBlog = async (id, blogToDelete) => {
-		await blogService.delete(id);
-
+	const handleBlogDelete = (blogToDelete) => {
+		dispatch(deleteBlog(blogToDelete.id));
 		dispatch(
 			setNotification(
 				"success",
 				`Deleted "${blogToDelete.title}" by ${blogToDelete.author}`
 			)
 		);
-
-		const updatedBlogs = await blogService.getAll();
-		dispatch(setBlogs(updatedBlogs));
 	};
 
 	const blogFormRef = useRef();
@@ -125,8 +124,8 @@ const App = () => {
 								key={blog.id}
 								blog={blog}
 								loggedUser={user}
-								updateBlog={updateBlog}
-								deleteBlog={deleteBlog}
+								onBlogUpdate={handleBlogUpdate}
+								onBlogDelete={handleBlogDelete}
 							/>
 						))}
 					</div>
