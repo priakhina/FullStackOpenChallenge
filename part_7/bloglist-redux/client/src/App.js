@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
-import { useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { setBlogs, createBlog } from "./reducers/blogReducer";
 import { setNotification } from "./reducers/notificationReducer";
 import Blog from "./components/Blog";
 import BlogForm from "./components/BlogForm";
@@ -10,15 +11,17 @@ import blogService from "./services/blogs";
 import loginService from "./services/login";
 
 const App = () => {
-	const [blogs, setBlogs] = useState([]);
 	const [username, setUsername] = useState("");
 	const [password, setPassword] = useState("");
 	const [user, setUser] = useState(null);
 
 	const dispatch = useDispatch();
+	const blogs = [...useSelector(({ blogs }) => blogs)].sort(
+		(a, b) => b.likes - a.likes
+	);
 
 	useEffect(() => {
-		blogService.getAll().then((blogs) => setBlogs(blogs));
+		blogService.getAll().then((blogs) => dispatch(setBlogs(blogs)));
 	}, []);
 
 	useEffect(() => {
@@ -59,9 +62,8 @@ const App = () => {
 	};
 
 	const addBlog = async (newBlog) => {
-		await blogService.create(newBlog);
-		const updatedBlogs = await blogService.getAll();
-		setBlogs(updatedBlogs);
+		const blog = await blogService.create(newBlog);
+		dispatch(createBlog({ blog, user }));
 		blogFormRef.current.toggleVisibility();
 
 		dispatch(
@@ -121,17 +123,15 @@ const App = () => {
 					</div>
 					{blogForm()}
 					<div className="blogs-block">
-						{blogs
-							.sort((a, b) => b.likes - a.likes)
-							.map((blog) => (
-								<Blog
-									key={blog.id}
-									blog={blog}
-									loggedUser={user}
-									updateBlog={updateBlog}
-									deleteBlog={deleteBlog}
-								/>
-							))}
+						{blogs.map((blog) => (
+							<Blog
+								key={blog.id}
+								blog={blog}
+								loggedUser={user}
+								updateBlog={updateBlog}
+								deleteBlog={deleteBlog}
+							/>
+						))}
 					</div>
 				</>
 			)}
