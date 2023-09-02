@@ -1,18 +1,25 @@
 import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { updateBlog, deleteBlog } from "../reducers/blogReducer";
+import { setNotification } from "../reducers/notificationReducer";
 
-const Blog = ({ blog, loggedUser, onBlogUpdate, onBlogDelete }) => {
-	const { title, author, url, likes, user } = blog;
+const Blog = ({ blog, loggedUser }) => {
+	const { id, title, author, url, likes, user } = blog;
 	const [visible, setVisible] = useState(false);
 	const buttonLabel = visible ? "hide" : "view";
 
 	const toggleVisibility = () => setVisible(!visible);
 
+	const dispatch = useDispatch();
+
 	const addLike = () => {
-		onBlogUpdate({
+		const updatedBlog = {
 			...blog,
 			likes: likes + 1,
 			user: user.id,
-		});
+		};
+
+		dispatch(updateBlog(updatedBlog));
 	};
 
 	const attemptDeleteBlog = () => {
@@ -21,7 +28,8 @@ const Blog = ({ blog, loggedUser, onBlogUpdate, onBlogDelete }) => {
 		);
 
 		if (confirmedDelete) {
-			onBlogDelete(blog);
+			dispatch(deleteBlog(id));
+			dispatch(setNotification("success", `Deleted "${title}" by ${author}`));
 		}
 	};
 

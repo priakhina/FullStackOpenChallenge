@@ -1,11 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import {
-	initializeBlogs,
-	createBlog,
-	updateBlog,
-	deleteBlog,
-} from "./reducers/blogReducer";
+import { initializeBlogs, createBlog } from "./reducers/blogReducer";
 import { setNotification } from "./reducers/notificationReducer";
 import Blog from "./components/Blog";
 import BlogForm from "./components/BlogForm";
@@ -21,6 +16,7 @@ const App = () => {
 	const [user, setUser] = useState(null);
 
 	const dispatch = useDispatch();
+
 	const blogs = [...useSelector(({ blogs }) => blogs)].sort(
 		(a, b) => b.likes - a.likes
 	);
@@ -76,20 +72,6 @@ const App = () => {
 		);
 	};
 
-	const handleBlogUpdate = (updatedBlog) => {
-		dispatch(updateBlog(updatedBlog));
-	};
-
-	const handleBlogDelete = (blogToDelete) => {
-		dispatch(deleteBlog(blogToDelete.id));
-		dispatch(
-			setNotification(
-				"success",
-				`Deleted "${blogToDelete.title}" by ${blogToDelete.author}`
-			)
-		);
-	};
-
 	const blogFormRef = useRef();
 
 	const blogForm = () => (
@@ -120,13 +102,7 @@ const App = () => {
 					{blogForm()}
 					<div className="blogs-block">
 						{blogs.map((blog) => (
-							<Blog
-								key={blog.id}
-								blog={blog}
-								loggedUser={user}
-								onBlogUpdate={handleBlogUpdate}
-								onBlogDelete={handleBlogDelete}
-							/>
+							<Blog key={blog.id} blog={blog} loggedUser={user} />
 						))}
 					</div>
 				</>
