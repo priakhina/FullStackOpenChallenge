@@ -1,7 +1,6 @@
 import { useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { initializeBlogs, createBlog } from "./reducers/blogReducer";
-import { setNotification } from "./reducers/notificationReducer";
+import { initializeBlogs } from "./reducers/blogReducer";
 import { initializeUser, logoutUser } from "./reducers/authReducer";
 import Blog from "./components/Blog";
 import BlogForm from "./components/BlogForm";
@@ -15,6 +14,7 @@ const App = () => {
 	const blogs = [...useSelector(({ blogs }) => blogs)].sort(
 		(a, b) => b.likes - a.likes
 	);
+	const blogFormRef = useRef();
 
 	useEffect(() => {
 		dispatch(initializeBlogs());
@@ -25,23 +25,9 @@ const App = () => {
 		dispatch(logoutUser());
 	};
 
-	const handleBlogCreate = (newBlog) => {
-		dispatch(createBlog(newBlog, user));
-		blogFormRef.current.toggleVisibility();
-
-		dispatch(
-			setNotification(
-				"success",
-				`Added a new blog "${newBlog.title}" by ${newBlog.author}`
-			)
-		);
-	};
-
-	const blogFormRef = useRef();
-
 	const blogForm = () => (
 		<Togglable buttonLabel="Create a new blog" ref={blogFormRef}>
-			<BlogForm onBlogCreate={handleBlogCreate} />
+			<BlogForm onBlogCreate={() => blogFormRef.current.toggleVisibility()} />
 		</Togglable>
 	);
 
