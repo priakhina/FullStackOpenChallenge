@@ -1,20 +1,14 @@
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { initializeBlogs } from "./reducers/blogReducer";
 import { initializeUser, logoutUser } from "./reducers/authReducer";
-import Blog from "./components/Blog";
-import BlogForm from "./components/BlogForm";
+import Blogs from "./components/Blogs";
 import LoginForm from "./components/LoginForm";
 import Notification from "./components/Notification";
-import Togglable from "./components/Togglable";
 
 const App = () => {
 	const dispatch = useDispatch();
 	const user = useSelector(({ auth }) => auth);
-	const blogs = [...useSelector(({ blogs }) => blogs)].sort(
-		(a, b) => b.likes - a.likes
-	);
-	const blogFormRef = useRef();
 
 	useEffect(() => {
 		dispatch(initializeBlogs());
@@ -24,12 +18,6 @@ const App = () => {
 	const handleUserLogout = () => {
 		dispatch(logoutUser());
 	};
-
-	const blogForm = () => (
-		<Togglable buttonLabel="Create a new blog" ref={blogFormRef}>
-			<BlogForm onBlogCreate={() => blogFormRef.current.toggleVisibility()} />
-		</Togglable>
-	);
 
 	return (
 		<div className="wrapper">
@@ -42,12 +30,7 @@ const App = () => {
 						<span>{user.name} logged in</span>{" "}
 						<button onClick={handleUserLogout}>Logout</button>
 					</div>
-					{blogForm()}
-					<div className="blogs-block">
-						{blogs.map((blog) => (
-							<Blog key={blog.id} blog={blog} loggedUser={user} />
-						))}
-					</div>
+					<Blogs />
 				</>
 			)}
 		</div>
