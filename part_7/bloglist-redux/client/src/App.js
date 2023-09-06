@@ -5,6 +5,7 @@ import { initializeBlogs } from "./reducers/blogReducer";
 import { initializeLoggedUser, logoutUser } from "./reducers/authReducer";
 import { initializeAllUsers } from "./reducers/userReducer";
 import Blogs from "./components/Blogs";
+import Blog from "./components/Blog";
 import Users from "./components/Users";
 import User from "./components/User";
 import LoginForm from "./components/LoginForm";
@@ -37,8 +38,9 @@ const App = () => {
 					</div>
 					<Routes>
 						<Route path="/" element={<Blogs />} />
-						<Route path="/users/:id" element={<User />} />
+						<Route path="/blogs/:id" element={<Blog />} />
 						<Route path="/users" element={<Users />} />
+						<Route path="/users/:id" element={<User />} />
 					</Routes>
 				</>
 			)}

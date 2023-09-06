@@ -1,12 +1,9 @@
 import { useSelector } from "react-redux";
-import { useMatch } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 const User = () => {
-	const allUsers = useSelector(({ users }) => users);
-	const match = useMatch("/users/:id");
-	const user = match
-		? allUsers.find((user) => user.id === match.params.id)
-		: null;
+	const { id } = useParams();
+	const user = useSelector(({ users }) => users.find((user) => user.id === id));
 
 	return (
 		user && (
