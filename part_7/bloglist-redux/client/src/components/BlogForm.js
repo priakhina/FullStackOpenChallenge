@@ -5,7 +5,7 @@ import { setNotification } from "../reducers/notificationReducer";
 
 const BlogForm = ({ onBlogCreate }) => {
 	const dispatch = useDispatch();
-	const user = useSelector(({ auth }) => auth);
+	const loggedUser = useSelector(({ auth }) => auth);
 	const [title, setTitle] = useState("");
 	const [author, setAuthor] = useState("");
 	const [url, setUrl] = useState("");
@@ -14,7 +14,7 @@ const BlogForm = ({ onBlogCreate }) => {
 		event.preventDefault();
 
 		const newBlog = { title, author, url };
-		dispatch(createBlog(newBlog, user));
+		dispatch(createBlog(newBlog, loggedUser));
 		dispatch(
 			setNotification("success", `Added a new blog "${title}" by ${author}`)
 		);

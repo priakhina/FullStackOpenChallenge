@@ -13,7 +13,7 @@ const authSlice = createSlice({
 	},
 });
 
-export const initializeUser = () => {
+export const initializeLoggedUser = () => {
 	return (dispatch) => {
 		const loggedUserJSON = window.localStorage.getItem("loggedBloglistAppUser");
 		if (loggedUserJSON) {

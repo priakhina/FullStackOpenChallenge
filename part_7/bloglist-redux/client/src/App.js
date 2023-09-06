@@ -1,18 +1,22 @@
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { Routes, Route } from "react-router-dom";
 import { initializeBlogs } from "./reducers/blogReducer";
-import { initializeUser, logoutUser } from "./reducers/authReducer";
+import { initializeLoggedUser, logoutUser } from "./reducers/authReducer";
+import { initializeAllUsers } from "./reducers/userReducer";
 import Blogs from "./components/Blogs";
+import Users from "./components/Users";
 import LoginForm from "./components/LoginForm";
 import Notification from "./components/Notification";
 
 const App = () => {
 	const dispatch = useDispatch();
-	const user = useSelector(({ auth }) => auth);
+	const loggedUser = useSelector(({ auth }) => auth);
 
 	useEffect(() => {
 		dispatch(initializeBlogs());
-		dispatch(initializeUser());
+		dispatch(initializeLoggedUser());
+		dispatch(initializeAllUsers());
 	}, []);
 
 	const handleUserLogout = () => {
@@ -22,15 +26,18 @@ const App = () => {
 	return (
 		<div className="wrapper">
 			<Notification />
-			{!user && <LoginForm />}
-			{user && (
+			{!loggedUser && <LoginForm />}
+			{loggedUser && (
 				<>
 					<h1>Blogs</h1>
 					<div className="logout-block">
-						<span>{user.name} logged in</span>{" "}
+						<span>{loggedUser.name} logged in</span>{" "}
 						<button onClick={handleUserLogout}>Logout</button>
 					</div>
-					<Blogs />
+					<Routes>
+						<Route path="/" element={<Blogs />} />
+						<Route path="/users" element={<Users />} />
+					</Routes>
 				</>
 			)}
 		</div>
