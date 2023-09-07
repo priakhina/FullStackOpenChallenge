@@ -35,6 +35,20 @@ h2 {
 	margin-bottom: 15px;
 }
 
+.navbar {
+	display: flex;
+	padding: 10px 20px;
+	background: #d3d3d3;
+}
+
+.navbar > a {
+	margin: 0 5px;
+}
+
+.navbar > a:first-child {
+	margin-left: 0;
+}
+
 .notification {
 	background: white;
 	font-size: 16px;
@@ -83,7 +97,7 @@ h2 {
 }
 
 .logout-block {
-	margin-bottom: 30px;
+	margin-left: 5px;
 }
 
 .create-new-blog-form {
