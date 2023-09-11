@@ -5,7 +5,7 @@ import { initializeBlogs } from "./reducers/blogReducer";
 import { initializeLoggedUser } from "./reducers/authReducer";
 import { initializeAllUsers } from "./reducers/userReducer";
 import Container from "react-bootstrap/Container";
-import NavBar from "./components/NavBar";
+import Navigation from "./components/Navigation";
 import Blogs from "./components/Blogs";
 import Blog from "./components/Blog";
 import Users from "./components/Users";
@@ -33,17 +33,19 @@ const App = () => {
 	}
 
 	return (
-		<Container>
-			<NavBar />
-			<Notification />
-			<h1>Blogs</h1>
-			<Routes>
-				<Route path="/" element={<Blogs />} />
-				<Route path="/blogs/:id" element={<Blog />} />
-				<Route path="/users" element={<Users />} />
-				<Route path="/users/:id" element={<User />} />
-			</Routes>
-		</Container>
+		<>
+			<Navigation />
+			<Container>
+				<Notification />
+				<h1>Blogs</h1>
+				<Routes>
+					<Route path="/" element={<Blogs />} />
+					<Route path="/blogs/:id" element={<Blog />} />
+					<Route path="/users" element={<Users />} />
+					<Route path="/users/:id" element={<User />} />
+				</Routes>
+			</Container>
+		</>
 	);
 };
 

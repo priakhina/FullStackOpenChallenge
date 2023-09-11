@@ -33,18 +33,14 @@ h2 {
 	margin: 30px 0;
 }
 
-.navbar {
-	display: flex;
-	padding: 10px 20px;
-	background: #d3d3d3;
+.navbar a {
+	color: #fff;
+	text-decoration: none;
 }
 
-.navbar > a {
-	margin: 0 5px;
-}
-
-.navbar > a:first-child {
-	margin-left: 0;
+.logout-block > span {
+	color: #fff;
+	margin-right: 5px;
 }
 
 .notification {
@@ -92,10 +88,6 @@ h2 {
 
 .notification.failure > span {
 	background: #f44336;
-}
-
-.logout-block {
-	margin-left: 5px;
 }
 
 .create-new-blog-form {
