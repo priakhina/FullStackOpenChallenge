@@ -15,6 +15,11 @@ const blogSchema = new mongoose.Schema({
 		type: mongoose.Schema.Types.ObjectId,
 		ref: "User",
 	},
+	comments: [
+		{
+			type: String,
+		},
+	],
 });
 
 // the toJSON method of the schema allows to format the objects returned by Mongoose

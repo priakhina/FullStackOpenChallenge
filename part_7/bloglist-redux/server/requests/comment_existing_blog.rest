@@ -1,0 +1,16 @@
+POST http://localhost:3003/api/blogs/BLOG-ID-HERE/comments
+Content-Type: application/json
+Authorization: Bearer USER-TOKEN-HERE
+
+{
+    "comment": "Awesome article!"
+}
+
+###
+POST http://localhost:3003/api/blogs/BLOG-ID-HERE/comments
+Content-Type: application/json
+Authorization: Bearer USER-TOKEN-HERE
+
+{
+    "comment": "A must-read for every developer"
+}

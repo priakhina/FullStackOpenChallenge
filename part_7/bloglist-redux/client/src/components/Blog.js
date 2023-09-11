@@ -41,7 +41,7 @@ const Blog = () => {
 					<span className="blog-title">{blog.title}</span>{" "}
 					<i className="blog-author">by {blog.author}</i>
 				</h2>
-				<div>
+				<div className="blog-contents">
 					<a className="blog-url" href={blog.url}>
 						{blog.url}
 					</a>
@@ -54,6 +54,17 @@ const Blog = () => {
 					{blog.user.username === loggedUser.username && (
 						<button onClick={attemptDeleteBlog}>Delete</button>
 					)}
+				</div>
+				<div className="blog-comments">
+					<h3>Comments</h3>
+					<ul className="comments-list">
+						{blog.comments.map((comment, index) => (
+							<li className="comment" key={index}>
+								{comment}
+							</li>
+						))}
+					</ul>
+					{!blog.comments.length && <p>No comments have been added yet...</p>}
 				</div>
 			</div>
 		)
