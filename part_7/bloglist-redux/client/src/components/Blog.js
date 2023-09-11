@@ -2,6 +2,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
 import { updateBlog, deleteBlog } from "../reducers/blogReducer";
 import { setNotification } from "../reducers/notificationReducer";
+import BlogCommentForm from "./BlogCommentForm";
 
 const Blog = () => {
 	const { id } = useParams();
@@ -57,6 +58,7 @@ const Blog = () => {
 				</div>
 				<div className="blog-comments">
 					<h3>Comments</h3>
+					<BlogCommentForm />
 					<ul className="comments-list">
 						{blog.comments.map((comment, index) => (
 							<li className="comment" key={index}>

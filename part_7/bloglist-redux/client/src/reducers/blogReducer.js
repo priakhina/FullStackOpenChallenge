@@ -40,11 +40,14 @@ export const createBlog = (newBlog, user) => {
 
 export const updateBlog = (updatedBlog) => {
 	return async (dispatch, getState) => {
-		const { likes } = await blogService.update(updatedBlog.id, updatedBlog);
+		const { likes, comments } = await blogService.update(
+			updatedBlog.id,
+			updatedBlog
+		);
 
 		const { blogs } = getState();
 		const updatedBlogs = blogs.map((blog) =>
-			blog.id !== updatedBlog.id ? blog : { ...blog, likes }
+			blog.id !== updatedBlog.id ? blog : { ...blog, likes, comments }
 		);
 		dispatch(setBlogs(updatedBlogs));
 	};
