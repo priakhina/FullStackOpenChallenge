@@ -4,6 +4,7 @@ import { Routes, Route } from "react-router-dom";
 import { initializeBlogs } from "./reducers/blogReducer";
 import { initializeLoggedUser } from "./reducers/authReducer";
 import { initializeAllUsers } from "./reducers/userReducer";
+import Container from "react-bootstrap/Container";
 import NavBar from "./components/NavBar";
 import Blogs from "./components/Blogs";
 import Blog from "./components/Blog";
@@ -24,15 +25,15 @@ const App = () => {
 
 	if (!loggedUser) {
 		return (
-			<div className="wrapper">
+			<Container>
 				<Notification />
 				<LoginForm />
-			</div>
+			</Container>
 		);
 	}
 
 	return (
-		<div className="wrapper">
+		<Container>
 			<NavBar />
 			<Notification />
 			<h1>Blogs</h1>
@@ -42,7 +43,7 @@ const App = () => {
 				<Route path="/users" element={<Users />} />
 				<Route path="/users/:id" element={<User />} />
 			</Routes>
-		</div>
+		</Container>
 	);
 };
 
