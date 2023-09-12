@@ -1,5 +1,7 @@
 import { useSelector, useDispatch } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
+import { Button } from "react-bootstrap";
+import { Heart, ChatRightTextFill } from "react-bootstrap-icons";
 import { updateBlog, deleteBlog } from "../reducers/blogReducer";
 import { setNotification } from "../reducers/notificationReducer";
 import BlogCommentForm from "./BlogCommentForm";
@@ -40,18 +42,21 @@ const Blog = () => {
 			<div className="blog">
 				<h2>
 					<span className="blog-title">{blog.title}</span>{" "}
-					<i className="blog-author">by {blog.author}</i>
+					<span className="blog-author">by {blog.author}</span>
 				</h2>
 				<div className="blog-contents">
 					<a className="blog-url" href={blog.url}>
 						{blog.url}
 					</a>
-					<p>
-						<span className="blog-likes">{blog.likes}</span>{" "}
-						{blog.likes === 1 ? "like" : "likes"}{" "}
-						<button onClick={addLike}>like</button>
-					</p>
-					<p>Added by {blog.user.name}</p>
+					<div className="blog-likes">
+						<p>
+							{blog.likes} {blog.likes === 1 ? "like" : "likes"}
+						</p>
+						<Button id="add-like-button" onClick={addLike}>
+							<Heart className="heart-icon" /> Like
+						</Button>
+					</div>
+					<p className="blog-user">Added by {blog.user.name}</p>
 					{blog.user.username === loggedUser.username && (
 						<button onClick={attemptDeleteBlog}>Delete</button>
 					)}
@@ -62,7 +67,8 @@ const Blog = () => {
 					<ul className="comments-list">
 						{blog.comments.map((comment, index) => (
 							<li className="comment" key={index}>
-								{comment}
+								<ChatRightTextFill className="chat-icon" />
+								<span>{comment}</span>
 							</li>
 						))}
 					</ul>

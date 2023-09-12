@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
+import { Form, Button } from "react-bootstrap";
 import { updateBlog } from "../reducers/blogReducer";
 import { setNotification } from "../reducers/notificationReducer";
 
@@ -31,17 +32,17 @@ const BlogCommentForm = () => {
 
 	return (
 		blog && (
-			<div className="comments-form">
-				<form onSubmit={addComment}>
-					<input
-						type="text"
-						value={comment}
-						name="comment"
-						onChange={({ target }) => setComment(target.value)}
-					/>
-					<button type="submit">Add comment</button>
-				</form>
-			</div>
+			<Form className="comments-form" onSubmit={addComment}>
+				<Form.Control
+					type="text"
+					value={comment}
+					name="comment"
+					onChange={({ target }) => setComment(target.value)}
+				/>
+				<Button id="add-comment-button" type="submit">
+					Add comment
+				</Button>
+			</Form>
 		)
 	);
 };
