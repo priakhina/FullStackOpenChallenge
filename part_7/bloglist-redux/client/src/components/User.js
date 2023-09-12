@@ -1,5 +1,6 @@
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
+import { JournalText } from "react-bootstrap-icons";
 
 const User = () => {
 	const { id } = useParams();
@@ -7,16 +8,19 @@ const User = () => {
 
 	return (
 		user && (
-			<div>
+			<>
 				<h2>{user.name}</h2>
 				<h3>Added blogs</h3>
-				<ul>
+				<ul className="user-blogs-list">
 					{user.blogs.map((blog) => (
-						<li key={blog.id}>{blog.title}</li>
+						<li className="blog" key={blog.id}>
+							<JournalText className="journal-icon" />
+							<span>{blog.title}</span>
+						</li>
 					))}
 				</ul>
 				{!user.blogs.length && <p>No blogs have been created yet...</p>}
-			</div>
+			</>
 		)
 	);
 };
