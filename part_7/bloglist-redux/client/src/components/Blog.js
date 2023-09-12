@@ -1,7 +1,7 @@
 import { useSelector, useDispatch } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
 import { Button } from "react-bootstrap";
-import { Heart, ChatRightTextFill } from "react-bootstrap-icons";
+import { Heart, ChatRightTextFill, Trash3Fill } from "react-bootstrap-icons";
 import { updateBlog, deleteBlog } from "../reducers/blogReducer";
 import { setNotification } from "../reducers/notificationReducer";
 import BlogCommentForm from "./BlogCommentForm";
@@ -58,7 +58,9 @@ const Blog = () => {
 					</div>
 					<p className="blog-user">Added by {blog.user.name}</p>
 					{blog.user.username === loggedUser.username && (
-						<button onClick={attemptDeleteBlog}>Delete</button>
+						<Button id="delete-blog-button" onClick={attemptDeleteBlog}>
+							<Trash3Fill className="trash-icon" /> Delete
+						</Button>
 					)}
 				</div>
 				<div className="blog-comments">

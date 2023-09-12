@@ -173,6 +173,23 @@ h3 {
 	color: #fff;
 }
 
+#delete-blog-button {
+	display: flex;
+	align-items: center;
+	color: #fff;
+	border-color: #f47067;
+	background: #f47067;
+}
+
+#delete-blog-button > .trash-icon {
+	margin-right: 5px;
+}
+
+#delete-blog-button:hover {
+	border-color: #f44336;
+	background: #f44336;
+}
+
 .blog-comments h3 {
 	margin: 40px 0 20px 0;
 }
