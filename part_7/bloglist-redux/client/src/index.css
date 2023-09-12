@@ -208,3 +208,37 @@ h3 {
 .blog-comments .comments-list > .comment > span {
 	padding-left: 12px;
 }
+
+#users-table > thead,
+#users-table > tbody,
+#users-table > tbody > tr,
+#users-table > tbody > tr > td {
+	border-width: 2px;
+	border-color: #89b9ff;
+}
+
+#users-table > thead {
+	font-size: 16px;
+	border: 0;
+}
+
+#users-table > tbody > tr > td {
+	padding: 15px 20px;
+}
+
+#users-table > tbody > tr > td > a {
+	color: #000;
+	text-decoration: none;
+}
+
+#users-table > tbody > tr:hover > td > a {
+	text-decoration: underline;
+}
+
+#users-table > tbody > tr:nth-child(odd) > td {
+	background: #e2eeff;
+}
+
+.table-striped > tbody > tr:nth-of-type(odd) > * {
+	--bs-table-bg-type: none;
+}

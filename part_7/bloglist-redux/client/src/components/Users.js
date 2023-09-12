@@ -1,5 +1,6 @@
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import { Table } from "react-bootstrap";
 
 const Users = () => {
 	const allUsers = [...useSelector(({ users }) => users)].sort(
@@ -7,9 +8,9 @@ const Users = () => {
 	);
 
 	return (
-		<div>
+		<>
 			<h2>Users</h2>
-			<table>
+			<Table id="users-table" striped>
 				<thead>
 					<tr>
 						<th></th>
@@ -26,8 +27,8 @@ const Users = () => {
 						</tr>
 					))}
 				</tbody>
-			</table>
-		</div>
+			</Table>
+		</>
 	);
 };
 
