@@ -20,6 +20,28 @@ enum ExerciseRatingDescription {
   Excellent = "You've reached your target! :D",
 }
 
+interface ExerciseValues {
+  targetAmount: number;
+  dailyExerciseHours: number[];
+}
+
+const parseExerciseArguments = (args: string[]): ExerciseValues => {
+  args.splice(0, 2);
+
+  const numericArgs = args
+    .map((arg) => parseFloat(arg))
+    .filter((arg) => !isNaN(arg));
+
+  if (numericArgs.length < args.length)
+    throw new Error('All arguments must be numberic values.');
+  if (numericArgs.length < 2)
+    throw new Error('At least 2 numeric arguments must be provided.');
+
+  const [targetAmount, ...dailyExerciseHours] = numericArgs;
+
+  return { targetAmount, dailyExerciseHours };
+};
+
 const calculateExercises = (
   dailyExerciseHours: number[],
   targetAmount: number
@@ -36,7 +58,7 @@ const calculateExercises = (
   const rating: number =
     averageInPercent >= 100
       ? ExerciseRating.Excellent
-      : averageInPercent >= 50
+      : averageInPercent >= 70
       ? ExerciseRating.Good
       : ExerciseRating.Bad;
   const ratingKey: string = ExerciseRating[rating];
@@ -57,4 +79,14 @@ const calculateExercises = (
   };
 };
 
-console.log(calculateExercises([3, 0, 2, 4.5, 0, 3, 1], 2));
+try {
+  const { targetAmount, dailyExerciseHours } = parseExerciseArguments(
+    process.argv
+  );
+  console.log(calculateExercises(dailyExerciseHours, targetAmount));
+} catch (error: unknown) {
+  console.log(
+    'Failed to calculate exercises:',
+    error instanceof Error ? error.message : 'Unknown error.'
+  );
+}
