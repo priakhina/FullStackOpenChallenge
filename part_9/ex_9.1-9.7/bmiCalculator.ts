@@ -3,9 +3,7 @@ interface BmiValues {
   weightInKg: number;
 }
 
-const parseBmiArguments = (args: string[]): BmiValues => {
-  args.splice(0, 2);
-
+export const parseBmiArguments = (args: string[]): BmiValues => {
   if (args.length !== 2)
     throw new Error('Exactly 2 numeric arguments must be provided.');
 
@@ -22,12 +20,15 @@ const parseBmiArguments = (args: string[]): BmiValues => {
   throw new Error('All arguments must be numeric values.');
 };
 
-const calculateBmi = (heightInCm: number, weightInKg: number): number => {
+export const calculateBmi = (
+  heightInCm: number,
+  weightInKg: number
+): number => {
   const bmi = weightInKg / Math.pow(heightInCm / 100, 2);
   return Math.round(bmi * 10) / 10; // rounding to one decimal place
 };
 
-const defineBmiCategory = (bmi: number): string => {
+export const defineBmiCategory = (bmi: number): string => {
   switch (true) {
     case bmi < 16:
       return 'Underweight (Severe thinness)';
@@ -49,7 +50,7 @@ const defineBmiCategory = (bmi: number): string => {
 };
 
 try {
-  const { heightInCm, weightInKg } = parseBmiArguments(process.argv);
+  const { heightInCm, weightInKg } = parseBmiArguments(process.argv.splice(2));
   console.log(defineBmiCategory(calculateBmi(heightInCm, weightInKg)));
 } catch (error: unknown) {
   console.log(
