@@ -31,22 +31,20 @@ const defineBmiCategory = (bmi: number): string => {
   switch (true) {
     case bmi < 16:
       return 'Underweight (Severe thinness)';
-    case bmi <= 16.9:
+    case bmi < 17:
       return 'Underweight (Moderate thinness)';
-    case bmi <= 18.4:
+    case bmi < 18.5:
       return 'Underweight (Mild thinness)';
-    case bmi <= 24.9:
+    case bmi < 25:
       return 'Normal (Healthy weight)';
-    case bmi <= 29.9:
+    case bmi < 30:
       return 'Overweight (Pre-obese)';
-    case bmi <= 34.9:
+    case bmi < 35:
       return 'Obese (Class I)';
-    case bmi <= 39.9:
+    case bmi < 40:
       return 'Obese (Class II)';
-    case bmi >= 40:
-      return 'Obese (Class III)';
     default:
-      break;
+      return 'Obese (Class III)';
   }
 };
 
